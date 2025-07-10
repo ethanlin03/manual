@@ -17,8 +17,8 @@ export default function TabLayout() {
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         headerShown: false,
-        //tabBarButton: HapticTab,
-        //tabBarBackground: TabBarBackground,
+        tabBarButton: HapticTab,
+        tabBarBackground: TabBarBackground,
         tabBarStyle: Platform.select({
           ios: {
             // Use a transparent background on iOS to show the blur effect
@@ -38,7 +38,14 @@ export default function TabLayout() {
         name="track"
         options={{
           title: 'Track',
-          tabBarIcon: ({ color }) => <Ionicons name="pencil" size={28} color={color} />
+          tabBarIcon: ({ color }) => <Ionicons name="add" size={28} color={color} />
+        }}
+      />
+      <Tabs.Screen
+        name="history"
+        options={{
+          title: 'History',
+          tabBarIcon: ({ color }) => <Ionicons name="hammer" size={28} color={color} />
         }}
       />
       <Tabs.Screen
