@@ -11,7 +11,7 @@ export default function Profile() {
 					</View>
 					<Text className="font-bold text-2xl text-[#6b7280]">Ethan Lin</Text>
 				</View>
-
+				{/* Add personal info */}
 				<View className="flex flex-col w-[90vw] space-y-20 h-auto">
 					<Text className="font-bold text-xl text-black">Service coming up</Text>
 					<Text className="font-bold text-xl text-black">Recently serviced</Text>
