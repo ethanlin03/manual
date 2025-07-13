@@ -1,11 +1,13 @@
 import { Pressable, SafeAreaView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import * as ImagePicker from 'expo-image-picker';
 import { useState } from 'react';
 
 const AddCar = () => {
     const router = useRouter();
-    const [image, setImage] = useState<string | null>(null);
+    const [image, setImage] = useState("");
+    // const [image, setImage] = useState<string | null>(null);
     const [openModal, setOpenModal] = useState(false);
     const [carName, setCarName] = useState("");
     const [carYear, setCarYear] = useState("");
@@ -21,6 +23,29 @@ const AddCar = () => {
     }
     const handleImageSelection = () => {
         setOpenModal(true);
+    }
+    const uploadImage = async () => {
+        try {
+            await ImagePicker.getCameraPermissionsAsync();
+            let result = await ImagePicker.launchCameraAsync({
+                cameraType: ImagePicker.CameraType.back,
+                allowsEditing: true,
+                aspect: [4, 3],
+                quality: 1,
+            });
+            if(!result.canceled) {
+                await saveImage(result.assets[0].uri)
+            }
+        } catch (error) {
+            alert("Error uploading image: " + error);
+        }
+    }
+    const saveImage = async (image: any) => {
+        try {
+            setImage(image);
+        } catch (error) {
+            throw error;
+        }
     }
 
     return (
