@@ -1,4 +1,4 @@
-import { SafeAreaView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Pressable, SafeAreaView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
@@ -7,6 +7,8 @@ import { useState } from 'react';
 const AddCar = () => {
     const router = useRouter();
     const [image, setImage] = useState("");
+    // const [image, setImage] = useState<string | null>(null);
+    const [openModal, setOpenModal] = useState(false);
     const [carName, setCarName] = useState("");
     const [carYear, setCarYear] = useState("");
     const [carMake, setCarMake] = useState("");
@@ -19,8 +21,8 @@ const AddCar = () => {
     const handleNextPage = () => {
         console.log("Next page");
     }
-    const handleIamgeSelection = () => {
-        console.log("Image selected");
+    const handleImageSelection = () => {
+        setOpenModal(true);
     }
     const uploadImage = async () => {
         try {
@@ -49,13 +51,32 @@ const AddCar = () => {
     return (
         <SafeAreaView className="flex-1 bg-white p-4">
 			<View className="flex p-4">
+                {openModal && 
+                    <Pressable onPress={() => setOpenModal(false)} className="absolute inset-0 bg-black/50 flex items-center justify-center z-10">
+                        <View className="flex flex-col bg-white min-w-[60vw] p-4 rounded-lg">
+                            <TouchableOpacity onPress={() => setOpenModal(false)} className="p-2 absolute top-0 right-0">
+                                <Ionicons name="close" size={20} color="black" />
+                            </TouchableOpacity>
+                            <View className="flex flex-row justify-between items-center mb-4 mt-6">
+                                <TouchableOpacity onPress={() => setImage('blank.jpg')} className="flex flex-col items-center">
+                                    <Ionicons name="cloud-upload-outline" size={30} />
+                                    <Text className="text-sm mb-4">Upload an Image</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => setImage('blank.jpg')} className="flex flex-col items-center">
+                                    <Ionicons name="camera-outline" size={30} />
+                                    <Text className="text-sm mb-4">Open Camera</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </Pressable>
+                }
                 <TouchableOpacity onPress={handleBack}>
                     <Ionicons name="arrow-back" size={20}/>
                 </TouchableOpacity>
                 <View className="flex justify-start items-center mb-6">
                     <Text className="text-2xl font-bold mb-2">Add a new car</Text>
                     {/* Image selection section */}
-                    <TouchableOpacity onPress={handleIamgeSelection} className="flex flex-col items-center justify-center w-[90vw] aspect-[16/9] bg-blue-200 rounded-xl border-2 border-blue-400">
+                    <TouchableOpacity onPress={handleImageSelection} className="flex flex-col items-center justify-center w-[90vw] aspect-[16/9] bg-blue-200 rounded-xl border-2 border-blue-400">
                         <Ionicons name="image-outline" size={30}/>
                         <Text className="mt-2 font-semibold">Select an image</Text>
                     </TouchableOpacity>
