@@ -1,4 +1,4 @@
-import { Pressable, SafeAreaView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Image, Pressable, SafeAreaView, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
@@ -6,8 +6,7 @@ import { useState } from 'react';
 
 const AddCar = () => {
     const router = useRouter();
-    const [image, setImage] = useState("");
-    // const [image, setImage] = useState<string | null>(null);
+    const [image, setImage] = useState<string | null>(null);
     const [openModal, setOpenModal] = useState(false);
     const [carName, setCarName] = useState("");
     const [carYear, setCarYear] = useState("");
@@ -19,20 +18,42 @@ const AddCar = () => {
 		router.push('/')
 	};
     const handleNextPage = () => {
-        console.log("Next page");
+        console.log("Next page")
+        console.log(image, carName, carYear, carMake, carModel, mileage)
+        alert("New car has been added!")
+        router.push('/')
     }
     const handleImageSelection = () => {
-        setOpenModal(true);
+        setOpenModal(true)
     }
-    const uploadImage = async () => {
+    const uploadImage = async (mode: 'gallery' | 'camera') => {
         try {
-            await ImagePicker.getCameraPermissionsAsync();
-            let result = await ImagePicker.launchCameraAsync({
-                cameraType: ImagePicker.CameraType.back,
-                allowsEditing: true,
-                aspect: [4, 3],
-                quality: 1,
-            });
+            let result: ImagePicker.ImagePickerResult;
+            if(mode === "gallery") {
+                const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+                if (status !== 'granted') {
+                    alert('Permission to access media library is required!');
+                    return;
+                }
+                result = await ImagePicker.launchImageLibraryAsync({
+                    mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                    allowsEditing: true,
+                    aspect: [4, 3],
+                    quality: 1,
+                });
+            } else {
+                const { status } = await ImagePicker.requestCameraPermissionsAsync();
+                if (status !== 'granted') {
+                    alert('Permission to access camera is required!');
+                    return;
+                }
+                result = await ImagePicker.launchCameraAsync({
+                    cameraType: ImagePicker.CameraType.back,
+                    allowsEditing: true,
+                    aspect: [4, 3],
+                    quality: 1,
+                });
+            }
             if(!result.canceled) {
                 await saveImage(result.assets[0].uri)
             }
@@ -43,6 +64,7 @@ const AddCar = () => {
     const saveImage = async (image: any) => {
         try {
             setImage(image);
+            setOpenModal(false);
         } catch (error) {
             throw error;
         }
@@ -50,7 +72,7 @@ const AddCar = () => {
 
     return (
         <SafeAreaView className="flex-1 bg-white p-4">
-			<View className="flex p-4">
+			<ScrollView className="flex p-4">
                 {openModal && 
                     <Pressable onPress={() => setOpenModal(false)} className="absolute inset-0 bg-black/50 flex items-center justify-center z-10">
                         <View className="flex flex-col bg-white min-w-[60vw] p-4 rounded-lg">
@@ -58,11 +80,11 @@ const AddCar = () => {
                                 <Ionicons name="close" size={20} color="black" />
                             </TouchableOpacity>
                             <View className="flex flex-row justify-between items-center mb-4 mt-6">
-                                <TouchableOpacity onPress={() => setImage('blank.jpg')} className="flex flex-col items-center">
+                                <TouchableOpacity onPress={() => uploadImage('gallery')} className="flex flex-col items-center">
                                     <Ionicons name="cloud-upload-outline" size={30} />
                                     <Text className="text-sm mb-4">Upload an Image</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => setImage('blank.jpg')} className="flex flex-col items-center">
+                                <TouchableOpacity onPress={() => uploadImage('camera')} className="flex flex-col items-center">
                                     <Ionicons name="camera-outline" size={30} />
                                     <Text className="text-sm mb-4">Open Camera</Text>
                                 </TouchableOpacity>
@@ -77,8 +99,18 @@ const AddCar = () => {
                     <Text className="text-2xl font-bold mb-2">Add a new car</Text>
                     {/* Image selection section */}
                     <TouchableOpacity onPress={handleImageSelection} className="flex flex-col items-center justify-center w-[90vw] aspect-[16/9] bg-blue-200 rounded-xl border-2 border-blue-400">
-                        <Ionicons name="image-outline" size={30}/>
-                        <Text className="mt-2 font-semibold">Select an image</Text>
+                        {image ? (
+                            <Image
+                                source={{ uri: image }}
+                                className="absolute w-full h-full rounded-xl"
+                                resizeMode="cover"
+                            />
+                        ) : (
+                            <View className="flex flex-col items-center justify-center">
+                                <Ionicons name="image-outline" size={30}/>
+                                <Text className="mt-2 font-semibold">Select an image</Text>
+                            </View>
+                        )}
                     </TouchableOpacity>
                 </View>
                 <View className="flex flex-col p-2 min-w-full">
@@ -136,7 +168,7 @@ const AddCar = () => {
                         <Ionicons name="arrow-forward" size={16}/>
                     </TouchableOpacity>
                 </View>
-            </View>
+            </ScrollView>
 		</SafeAreaView>
     );
 };
