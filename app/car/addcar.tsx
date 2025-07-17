@@ -117,47 +117,47 @@ const AddCar = () => {
                     <Text className="text-sm italic mb-1">Car name:</Text>
                     <View className="flex-grow flex-row py-2 px-2 rounded-lg bg-gray-200 mb-6">
                         <TextInput
-                            placeholder="Enter car name..."
+                            placeholder="Enter name..."
                             placeholderTextColor="#888"
                             value={carName}
                             onChangeText={setCarName}
                             className="ml-2"
                         />
                     </View>
-                    <Text className="text-sm italic mb-1">Car year:</Text>
+                    <Text className="text-sm italic mb-1">Year:</Text>
                     <View className="flex-grow flex-row py-2 px-2 rounded-lg bg-gray-200 mb-6">
                         <TextInput
-                            placeholder="Enter car year..."
+                            placeholder="Enter year..."
                             placeholderTextColor="#888"
                             value={carYear}
                             onChangeText={setCarYear}
                             className="ml-2"
                         />
                     </View>
-                    <Text className="text-sm italic mb-1">Car make:</Text>
+                    <Text className="text-sm italic mb-1">Make:</Text>
                     <View className="flex-grow flex-row py-2 px-2 rounded-lg bg-gray-200 mb-6">
                         <TextInput
-                            placeholder="Enter car make..."
+                            placeholder="Enter make..."
                             placeholderTextColor="#888"
                             value={carMake}
                             onChangeText={setCarMake}
                             className="ml-2"
                         />
                     </View>
-                    <Text className="text-sm italic mb-1">Car model:</Text>
+                    <Text className="text-sm italic mb-1">Model:</Text>
                     <View className="flex-grow flex-row py-2 px-2 rounded-lg bg-gray-200 mb-6">
                         <TextInput
-                            placeholder="Enter car model..."
+                            placeholder="Enter model..."
                             placeholderTextColor="#888"
                             value={carModel}
                             onChangeText={setCarModel}
                             className="ml-2"
                         />
                     </View>
-                    <Text className="text-sm italic mb-1">Car mileage:</Text>
+                    <Text className="text-sm italic mb-1">Mileage:</Text>
                     <View className="flex-grow flex-row py-2 px-2 rounded-lg bg-gray-200 mb-20">
                         <TextInput
-                            placeholder="Enter car mileage..."
+                            placeholder="Enter mileage..."
                             placeholderTextColor="#888"
                             value={mileage}
                             onChangeText={setMileage}
