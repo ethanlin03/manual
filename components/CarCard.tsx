@@ -19,7 +19,7 @@ const CarCard: React.FC<CarCardProps> = ({name, desc, mileage, image, index}) =>
         });
     };
     return (
-        <TouchableOpacity onPress={handleCarSelect} className="flex flex-row items-center shadow-gray-300 shadow-sm max-w-[95vw] bg-white border-b-1 border-gray-400 p-2 mb-2">
+        <TouchableOpacity onPress={handleCarSelect} className="flex flex-row items-center shadow-gray-300 shadow-sm max-w-[95vw] bg-white border-b-1 border-gray-400 mb-2">
             <Image source={image} className="max-w-[30vw] h-auto aspect-[4/3] mr-2"/>
             <View className="flex flex-col items-start justify-start space-y-2 mb-auto">
                 <Text className="text-lg font-semibold mb-1">{name}</Text>
