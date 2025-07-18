@@ -1,14 +1,38 @@
-import { Image, Pressable, SafeAreaView, View, Text, TouchableOpacity } from 'react-native';
+import { Image, Pressable, SafeAreaView, ScrollView, View, Text, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import CarCard from '@/components/CarCard_v2';
+import CarImg from '@/assets/images/car.png';
 import * as ImagePicker from 'expo-image-picker';
 
+type Car = {
+	index: number;
+	name: string;
+	desc: string;
+	mileage: string
+	image: any; 
+};
+
+const carInfos = ["16_ct2", "2016 Honda Accord", "70,000"];
+
 export default function Profile() {
+	const [carArr, setCarArr] = useState<Car[]>([]);
 	const [openModal, setOpenModal] = useState(false);
 	const [profilePicture, setProfilePicture] = useState<string | null>(null);
 	const handleProfilePicture = () => {
 		setOpenModal(true);
 	}
+
+	useEffect(() => {
+		const arr = Array.from({ length: 12 }, (_, i) => ({
+			index: i,
+			name: carInfos[0],
+			desc: carInfos[1],
+			mileage: carInfos[2],
+			image: CarImg
+		}));
+    	setCarArr(arr);
+	}, []);
 
 	const uploadImage = async (mode: 'gallery' | 'camera') => {
 		try {
@@ -95,10 +119,60 @@ export default function Profile() {
 					<Text className="font-bold text-2xl text-[#000]">Ethan Lin</Text>
 				</View>
 				{/* Add personal info */}
-				<View className="flex flex-col w-[90vw] space-y-20 h-auto">
-					<Text className="font-bold text-xl text-black">Service coming up</Text>
+				<View className="flex flex-col w-[90vw]">
+					<View>
+						<Text className="font-bold text-xl text-black">Service coming up</Text>
+						<ScrollView
+							horizontal={true}
+							showsHorizontalScrollIndicator={false}
+      						className="flex-row h-[30vh] py-2 px-1"
+						>
+							{carArr.map((car) => (
+								<CarCard 
+									key={car.index}
+									index={car.index}
+									name={car.name}
+									desc={car.desc}
+									mileage={car.mileage}
+									image={car.image}
+								/>
+							))}
+						</ScrollView>
+					</View>
 					<Text className="font-bold text-xl text-black">Recently serviced</Text>
+						<ScrollView
+							horizontal={true}
+							showsHorizontalScrollIndicator={false}
+      						className="flex-row h-[30vh] py-2 px-1"
+						>
+							{carArr.map((car) => (
+								<CarCard 
+									key={car.index}
+									index={car.index}
+									name={car.name}
+									desc={car.desc}
+									mileage={car.mileage}
+									image={car.image}
+								/>
+							))}
+						</ScrollView>
 					<Text className="font-bold text-xl text-black">Most used</Text>
+						<ScrollView
+							horizontal={true}
+							showsHorizontalScrollIndicator={false}
+      						className="flex-row h-[30vh] py-2 px-1"
+						>
+							{carArr.map((car) => (
+								<CarCard 
+									key={car.index}
+									index={car.index}
+									name={car.name}
+									desc={car.desc}
+									mileage={car.mileage}
+									image={car.image}
+								/>
+							))}
+						</ScrollView>
 				</View>
 			</View>
 		</SafeAreaView>
