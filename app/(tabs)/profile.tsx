@@ -1,6 +1,9 @@
 import { Image, Pressable, SafeAreaView, ScrollView, View, Text, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useState, useEffect } from 'react';
+import { signOut } from "firebase/auth";
+import { auth } from "../../FirebaseConfig";
+import { useRouter } from 'expo-router';
 import CarCard from '@/components/CarCard_v2';
 import CarImg from '@/assets/images/car.png';
 import * as ImagePicker from 'expo-image-picker';
@@ -16,6 +19,7 @@ type Car = {
 const carInfos = ["16_ct2", "2016 Honda Accord", "70,000"];
 
 export default function Profile() {
+	const router = useRouter();
 	const [carArr, setCarArr] = useState<Car[]>([]);
 	const [openModal, setOpenModal] = useState(false);
 	const [profilePicture, setProfilePicture] = useState<string | null>(null);
@@ -77,6 +81,15 @@ export default function Profile() {
 			throw error;
 		}
 	}
+	const handleSignOut = async () => {
+		try {
+			await signOut(auth);
+			router.replace('/login')
+			console.log("User signed out");
+		} catch (error) {
+			console.error("Error signing out:", error);
+		}
+	}
 
 	return (
 		<SafeAreaView className="flex-1 max-h-screen items-center justify-start bg-white pb-20">
@@ -122,64 +135,67 @@ export default function Profile() {
 						<Text className="font-bold text-2xl text-[#000]">Ethan Lin</Text>
 					</View>
 					{/* Add personal info */}
-					<View className="flex flex-col w-[90vw]">
-						<View>
-							<Text className="font-bold text-xl text-black">Service coming up</Text>
-							<ScrollView
-								horizontal={true}
-								showsHorizontalScrollIndicator={false}
-								directionalLockEnabled={true}
-								className="flex-row h-auto py-2 px-1"
-							>
-								{carArr.map((car) => (
-									<CarCard
-										key={car.index}
-										index={car.index}
-										name={car.name}
-										desc={car.desc}
-										mileage={car.mileage}
-										image={car.image}
-									/>
-								))}
-							</ScrollView>
-						</View>
+					<View className="flex flex-col w-[90vw] mb-2">
+						<Text className="font-bold text-xl text-black">Service coming up</Text>
+						<ScrollView
+							horizontal={true}
+							showsHorizontalScrollIndicator={false}
+							directionalLockEnabled={true}
+							className="flex-row h-auto py-2 px-1"
+						>
+							{carArr.map((car) => (
+								<CarCard
+									key={car.index}
+									index={car.index}
+									name={car.name}
+									desc={car.desc}
+									mileage={car.mileage}
+									image={car.image}
+								/>
+							))}
+						</ScrollView>
+
 						<Text className="font-bold text-xl text-black">Recently serviced</Text>
-							<ScrollView
-								horizontal={true}
-								showsHorizontalScrollIndicator={false}
-								directionalLockEnabled={true}
-								className="flex-row h-auto py-2 px-1"
-							>
-								{carArr.map((car) => (
-									<CarCard
-										key={car.index}
-										index={car.index}
-										name={car.name}
-										desc={car.desc}
-										mileage={car.mileage}
-										image={car.image}
-									/>
-								))}
-							</ScrollView>
+						<ScrollView
+							horizontal={true}
+							showsHorizontalScrollIndicator={false}
+							directionalLockEnabled={true}
+							className="flex-row h-auto py-2 px-1"
+						>
+							{carArr.map((car) => (
+								<CarCard
+									key={car.index}
+									index={car.index}
+									name={car.name}
+									desc={car.desc}
+									mileage={car.mileage}
+									image={car.image}
+								/>
+							))}
+						</ScrollView>
+
 						<Text className="font-bold text-xl text-black">Most used</Text>
-							<ScrollView
-								horizontal={true}
-								showsHorizontalScrollIndicator={false}
-								directionalLockEnabled={true}
-								className="flex-row h-auto py-2 px-1"
-							>
-								{carArr.map((car) => (
-									<CarCard
-										key={car.index}
-										index={car.index}
-										name={car.name}
-										desc={car.desc}
-										mileage={car.mileage}
-										image={car.image}
-									/>
-								))}
-							</ScrollView>
+						<ScrollView
+							horizontal={true}
+							showsHorizontalScrollIndicator={false}
+							directionalLockEnabled={true}
+							className="flex-row h-auto py-2 px-1"
+						>
+							{carArr.map((car) => (
+								<CarCard
+									key={car.index}
+									index={car.index}
+									name={car.name}
+									desc={car.desc}
+									mileage={car.mileage}
+									image={car.image}
+								/>
+							))}
+						</ScrollView>
 					</View>
+					<TouchableOpacity onPress={handleSignOut} className="flex bg-gray-200 p-2 rounded-full w-[50vw] items-center">
+						<Text className="text-red-400 font-semibold">Sign Out</Text>
+					</TouchableOpacity>
 				</View>
 			</ScrollView>
 		</SafeAreaView>
