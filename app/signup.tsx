@@ -26,6 +26,7 @@ export default function SignUp() {
                 router.replace('/(tabs)')
         } catch (error: any) {
             console.log("Error:" + error.message)
+            alert("Error: " + error.code)
         }
     }
     return (

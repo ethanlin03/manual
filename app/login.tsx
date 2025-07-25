@@ -20,6 +20,7 @@ export default function Login() {
                 router.replace('/(tabs)')
         } catch (error: any) {
             console.log("Error:" + error.message)
+            alert("Error:" + error.code)
         }
     }
     return (
