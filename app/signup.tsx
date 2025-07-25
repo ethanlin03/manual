@@ -2,10 +2,11 @@ import { TouchableOpacity, Text, TextInput, View, SafeAreaView } from "react-nat
 import { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+import { auth } from "../FirebaseConfig";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
 export default function SignUp() {
     const router = useRouter();
-    const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmedPass, setConfirmedPass] = useState("");
@@ -18,23 +19,19 @@ export default function SignUp() {
     const handleConfirmedVisibility = () => {
         setConfirmedPassVisibility(!confirmedPassVisibility)
     }
-    const handleSignup = () => {
-
+    const handleSignup = async () => {
+        try {
+            const user = await createUserWithEmailAndPassword(auth, email, password)
+            if (user) 
+                router.replace('/(tabs)')
+        } catch (error: any) {
+            console.log("Error:" + error.message)
+        }
     }
     return (
         <SafeAreaView className="flex-1 bg-white justify-center items-center">
             <View className="flex flex-col p-10 bg-gray-200 justify-center items-center rounded-2xl gap-6 w-[70vw]">
                 <Text className="text-2xl font-bold">Create an Account</Text>
-                <View className="flex w-full">
-                    <Text className="italic text-gray-600 mb-1 text-sm">Username:</Text>
-                    <TextInput
-                        placeholder="Enter username..."
-                        placeholderTextColor="#4b5563"
-                        className="p-2 bg-white rounded-lg"
-                        value={username}
-                        onChangeText={setUsername}
-                    />
-                </View>
                 <View className="flex w-full">
                     <Text className="italic text-gray-600 mb-1 text-sm">Email:</Text>
                     <TextInput

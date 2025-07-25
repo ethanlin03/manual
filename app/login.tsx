@@ -2,30 +2,38 @@ import { TouchableOpacity, Text, TextInput, View, SafeAreaView } from "react-nat
 import { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+import { auth } from "../FirebaseConfig";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 export default function Login() {
     const router = useRouter();
-    const [username, setUsername] = useState("");
+    const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [passwordVisibility, setPasswordVisibility] = useState(false);
     const handleVisibility = () => {
         setPasswordVisibility(!passwordVisibility)
     }
-    const handleLogin = () => {
-
+    const handleLogin = async () => {
+        try {
+            const user = await signInWithEmailAndPassword(auth, email, password);
+            if (user) 
+                router.replace('/(tabs)')
+        } catch (error: any) {
+            console.log("Error:" + error.message)
+        }
     }
     return (
         <SafeAreaView className="flex-1 bg-white justify-center items-center">
             <View className="flex flex-col p-10 bg-gray-200 justify-center items-center rounded-2xl gap-6 w-[70vw]">
                 <Text className="text-2xl font-bold">Login</Text>
                 <View className="flex w-full">
-                    <Text className="italic text-gray-600 mb-1 text-sm">Username:</Text>
+                    <Text className="italic text-gray-600 mb-1 text-sm">Email:</Text>
                     <TextInput
-                        placeholder="Enter username..."
+                        placeholder="Enter email..."
                         placeholderTextColor="#4b5563"
                         className="p-2 bg-white rounded-lg"
-                        value={username}
-                        onChangeText={setUsername}
+                        value={email}
+                        onChangeText={setEmail}
                     />
                 </View>
                 <View className="flex w-full">
