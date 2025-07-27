@@ -2,8 +2,10 @@ import { TouchableOpacity, Text, TextInput, View, SafeAreaView } from "react-nat
 import { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import { auth } from "../FirebaseConfig";
+import { auth, db } from "../FirebaseConfig";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import { setDoc, doc } from "firebase/firestore";
+import { serverTimestamp } from "firebase/database";
 
 export default function SignUp() {
     const router = useRouter();
@@ -21,8 +23,14 @@ export default function SignUp() {
     }
     const handleSignup = async () => {
         try {
-            const user = await createUserWithEmailAndPassword(auth, email, password)
-            if (user) 
+            const userCreds = await createUserWithEmailAndPassword(auth, email, password)
+            const user = userCreds.user
+
+            await setDoc(doc(db, 'users', user.uid), {
+                email: user.email,
+                createdAt: serverTimestamp()
+            })
+            if (userCreds) 
                 router.replace('/(tabs)')
         } catch (error: any) {
             console.log("Error:" + error.message)
