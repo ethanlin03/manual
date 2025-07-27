@@ -2,7 +2,7 @@ import { TouchableOpacity, Text, TextInput, View, SafeAreaView } from "react-nat
 import { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import { auth, db } from "../FirebaseConfig";
+import { auth, db } from "@/FirebaseConfig";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { setDoc, doc } from "firebase/firestore";
 import { serverTimestamp } from "firebase/database";

@@ -3,9 +3,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useState, useEffect } from 'react';
 import { getDoc, doc } from 'firebase/firestore';
+import { db } from '@/FirebaseConfig';
 import { getAuth } from 'firebase/auth';
 import CarCard from '@/components/CarCard';
-import CarImg from '@/assets/images/car.png';
 
 type Car = {
 	index: number;
@@ -19,7 +19,6 @@ const carInfos = ["16_ct2", "2016 Honda Accord", "70,000"];
 
 export default function Home() {
 	const router = useRouter();
-	const [userId, setUserId] = useState<string | undefined>("");
 	const [carArr, setCarArr] = useState<Car[]>([]);
 
 	const handleAddCar = () => {
@@ -27,18 +26,31 @@ export default function Home() {
 	};
 
 	useEffect(() => {
-		const auth = getAuth();
-		const userId = auth.currentUser?.uid;
-		setUserId(userId);
-		
-		const arr = Array.from({ length: 12 }, (_, i) => ({
-			index: i,
-			name: carInfos[0],
-			desc: carInfos[1],
-			mileage: carInfos[2],
-			image: CarImg
-		}));
-    	setCarArr(arr);
+		const fetchUserCars = async () => {
+			const auth = getAuth();
+			if (!auth.currentUser) {
+				alert("User not authenticated.");
+				return;
+			}
+			const userId = auth.currentUser.uid;
+			const userCarRef = doc(db, "cars", userId);
+			const userCarsSnap = await getDoc(userCarRef);
+			if (userCarsSnap.exists()) {
+				const userCarsArr = userCarsSnap.data().cars || []
+
+				console.log(userCarsArr)
+				const arr = userCarsArr.map((car: any, i: number) => ({
+					index: i,
+					name: car.name,
+					desc: car.year + " " + car.make + " " + car.model,
+					mileage: car.mileage,
+					image: car.image,
+				}));
+				setCarArr(arr);
+			}
+		};
+
+		fetchUserCars();
 	}, []);
   	return (
 		<SafeAreaView className="flex-1 bg-white">

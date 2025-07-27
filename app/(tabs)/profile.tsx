@@ -2,7 +2,7 @@ import { Image, Pressable, SafeAreaView, ScrollView, View, Text, TouchableOpacit
 import { Ionicons } from '@expo/vector-icons';
 import { useState, useEffect } from 'react';
 import { signOut } from "firebase/auth";
-import { auth } from "../../FirebaseConfig";
+import { auth } from "@/FirebaseConfig";
 import { useRouter } from 'expo-router';
 import CarCard from '@/components/CarCard_v2';
 import CarImg from '@/assets/images/car.png';

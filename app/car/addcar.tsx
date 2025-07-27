@@ -4,7 +4,7 @@ import { useRouter } from 'expo-router';
 import { addDoc, setDoc, collection, doc, arrayUnion, updateDoc } from "firebase/firestore";
 import { useState, useEffect } from 'react';
 import { Image, Pressable, SafeAreaView, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { db } from "../../FirebaseConfig";
+import { db } from "@/FirebaseConfig";
 import { getAuth } from '@firebase/auth';
 
 const AddCar = () => {
