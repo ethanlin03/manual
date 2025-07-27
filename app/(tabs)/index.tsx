@@ -18,6 +18,7 @@ const carInfos = ["16_ct2", "2016 Honda Accord", "70,000"];
 export default function Home() {
 	const router = useRouter();
 	const [carArr, setCarArr] = useState<Car[]>([]);
+
 	const handleAddCar = () => {
 		router.push('/car/addcar');
 	};

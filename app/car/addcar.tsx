@@ -3,6 +3,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
 import { useState } from 'react';
+import { setDoc, doc } from "firebase/firestore";
+import { getAuth } from 'firebase/auth';
+import { auth, db } from "../../FirebaseConfig";
 
 const AddCar = () => {
     const router = useRouter();
@@ -17,11 +20,14 @@ const AddCar = () => {
     const handleBack = () => {
 		router.push('/')
 	};
-    const handleNextPage = () => {
-        console.log("Next page")
-        console.log(image, carName, carYear, carMake, carModel, mileage)
-        alert("New car has been added!")
-        router.push('/')
+    const handleNextPage = async () => {
+        if(image && carName && carYear && carMake && carModel && mileage) {
+            console.log("Next page")
+            console.log(image, carName, carYear, carMake, carModel, mileage)
+            alert("New car has been added!")
+            router.push('/(tabs)')
+        }
+        alert("Fill in the fields!")
     }
     const handleImageSelection = () => {
         setOpenModal(true)
