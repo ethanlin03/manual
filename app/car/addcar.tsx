@@ -1,11 +1,10 @@
-import { Image, Pressable, SafeAreaView, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
+import { useRouter } from 'expo-router';
+import { addDoc, collection } from "firebase/firestore";
 import { useState } from 'react';
-import { setDoc, doc } from "firebase/firestore";
-import { getAuth } from 'firebase/auth';
-import { auth, db } from "../../FirebaseConfig";
+import { Image, Pressable, SafeAreaView, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { db } from "../../FirebaseConfig";
 
 const AddCar = () => {
     const router = useRouter();
@@ -18,16 +17,28 @@ const AddCar = () => {
     const [mileage, setMileage] = useState("");
 
     const handleBack = () => {
-		router.push('/')
+		router.back()
 	};
     const handleNextPage = async () => {
+        // will need to handle images later
         if(image && carName && carYear && carMake && carModel && mileage) {
-            console.log("Next page")
-            console.log(image, carName, carYear, carMake, carModel, mileage)
-            alert("New car has been added!")
-            router.push('/(tabs)')
+            try {
+                await addDoc(collection(db, "cars"), {
+                    name: carName,
+                    year: carYear,
+                    make: carMake,
+                    model: carModel,
+                    mileage: mileage,
+                    image: image
+                });
+                alert("New car has been added!")
+                router.push('/(tabs)')
+            } catch (error: any) {
+                alert("Error adding car: " + error.message)
+            }
+        } else {
+            alert("Fill in the fields!")
         }
-        alert("Fill in the fields!")
     }
     const handleImageSelection = () => {
         setOpenModal(true)
@@ -78,26 +89,26 @@ const AddCar = () => {
 
     return (
         <SafeAreaView className="flex-1 bg-white p-4">
-			<ScrollView className="flex p-4">
-                {openModal && 
-                    <Pressable onPress={() => setOpenModal(false)} className="absolute inset-0 bg-black/50 flex items-center justify-center z-10">
-                        <View className="flex flex-col bg-white min-w-[60vw] p-4 rounded-lg">
-                            <TouchableOpacity onPress={() => setOpenModal(false)} className="p-2 absolute top-0 right-0">
-                                <Ionicons name="close" size={20} color="black" />
+            {openModal && 
+                <Pressable onPress={() => setOpenModal(false)} className="absolute inset-0 bg-black/50 flex items-center justify-center z-10">
+                    <View className="flex flex-col bg-white min-w-[60vw] p-4 rounded-lg">
+                        <TouchableOpacity onPress={() => setOpenModal(false)} className="p-2 absolute top-0 right-0">
+                            <Ionicons name="close" size={20} color="black" />
+                        </TouchableOpacity>
+                        <View className="flex flex-row justify-between items-center mb-4 mt-6">
+                            <TouchableOpacity onPress={() => uploadImage('gallery')} className="flex flex-col items-center">
+                                <Ionicons name="cloud-upload-outline" size={30} />
+                                <Text className="text-sm mb-4">Upload an Image</Text>
                             </TouchableOpacity>
-                            <View className="flex flex-row justify-between items-center mb-4 mt-6">
-                                <TouchableOpacity onPress={() => uploadImage('gallery')} className="flex flex-col items-center">
-                                    <Ionicons name="cloud-upload-outline" size={30} />
-                                    <Text className="text-sm mb-4">Upload an Image</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity onPress={() => uploadImage('camera')} className="flex flex-col items-center">
-                                    <Ionicons name="camera-outline" size={30} />
-                                    <Text className="text-sm mb-4">Open Camera</Text>
-                                </TouchableOpacity>
-                            </View>
+                            <TouchableOpacity onPress={() => uploadImage('camera')} className="flex flex-col items-center">
+                                <Ionicons name="camera-outline" size={30} />
+                                <Text className="text-sm mb-4">Open Camera</Text>
+                            </TouchableOpacity>
                         </View>
-                    </Pressable>
-                }
+                    </View>
+                </Pressable>
+            }
+			<ScrollView className="flex p-4">
                 <TouchableOpacity onPress={handleBack}>
                     <Ionicons name="arrow-back" size={20}/>
                 </TouchableOpacity>
@@ -121,55 +132,45 @@ const AddCar = () => {
                 </View>
                 <View className="flex flex-col p-2 min-w-full">
                     <Text className="text-sm italic mb-1">Car name:</Text>
-                    <View className="flex-grow flex-row py-2 px-2 rounded-lg bg-gray-200 mb-6">
-                        <TextInput
-                            placeholder="Enter name..."
-                            placeholderTextColor="#888"
-                            value={carName}
-                            onChangeText={setCarName}
-                            className="ml-2"
-                        />
-                    </View>
+                    <TextInput
+                        placeholder="Enter name..."
+                        placeholderTextColor="#888"
+                        value={carName}
+                        onChangeText={setCarName}
+                        className="rounded-lg bg-gray-200 mb-6 p-2 px-4"
+                    />
                     <Text className="text-sm italic mb-1">Year:</Text>
-                    <View className="flex-grow flex-row py-2 px-2 rounded-lg bg-gray-200 mb-6">
-                        <TextInput
-                            placeholder="Enter year..."
-                            placeholderTextColor="#888"
-                            value={carYear}
-                            onChangeText={setCarYear}
-                            className="ml-2"
-                        />
-                    </View>
+                    <TextInput
+                        placeholder="Enter year..."
+                        placeholderTextColor="#888"
+                        value={carYear}
+                        onChangeText={setCarYear}
+                        className="rounded-lg bg-gray-200 mb-6 p-2 px-4"
+                    />
                     <Text className="text-sm italic mb-1">Make:</Text>
-                    <View className="flex-grow flex-row py-2 px-2 rounded-lg bg-gray-200 mb-6">
-                        <TextInput
-                            placeholder="Enter make..."
-                            placeholderTextColor="#888"
-                            value={carMake}
-                            onChangeText={setCarMake}
-                            className="ml-2"
-                        />
-                    </View>
+                    <TextInput
+                        placeholder="Enter make..."
+                        placeholderTextColor="#888"
+                        value={carMake}
+                        onChangeText={setCarMake}
+                        className="rounded-lg bg-gray-200 mb-6 p-2 px-4"
+                    />
                     <Text className="text-sm italic mb-1">Model:</Text>
-                    <View className="flex-grow flex-row py-2 px-2 rounded-lg bg-gray-200 mb-6">
-                        <TextInput
-                            placeholder="Enter model..."
-                            placeholderTextColor="#888"
-                            value={carModel}
-                            onChangeText={setCarModel}
-                            className="ml-2"
-                        />
-                    </View>
+                    <TextInput
+                        placeholder="Enter model..."
+                        placeholderTextColor="#888"
+                        value={carModel}
+                        onChangeText={setCarModel}
+                        className="rounded-lg bg-gray-200 mb-6 p-2 px-4"
+                    />
                     <Text className="text-sm italic mb-1">Mileage:</Text>
-                    <View className="flex-grow flex-row py-2 px-2 rounded-lg bg-gray-200 mb-20">
-                        <TextInput
-                            placeholder="Enter mileage..."
-                            placeholderTextColor="#888"
-                            value={mileage}
-                            onChangeText={setMileage}
-                            className="ml-2"
-                        />
-                    </View>
+                    <TextInput
+                        placeholder="Enter mileage..."
+                        placeholderTextColor="#888"
+                        value={mileage}
+                        onChangeText={setMileage}
+                        className="rounded-lg bg-gray-200 mb-6 p-2 px-4"
+                    />
                     <TouchableOpacity onPress={handleNextPage} className="flex flex-row items-end justify-end">
                         <Ionicons name="arrow-forward" size={16}/>
                     </TouchableOpacity>
