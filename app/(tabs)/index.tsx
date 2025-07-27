@@ -2,6 +2,8 @@ import { ScrollView, Text, TouchableOpacity, View, SafeAreaView } from 'react-na
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useState, useEffect } from 'react';
+import { getDoc, doc } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
 import CarCard from '@/components/CarCard';
 import CarImg from '@/assets/images/car.png';
 
@@ -17,6 +19,7 @@ const carInfos = ["16_ct2", "2016 Honda Accord", "70,000"];
 
 export default function Home() {
 	const router = useRouter();
+	const [userId, setUserId] = useState<string | undefined>("");
 	const [carArr, setCarArr] = useState<Car[]>([]);
 
 	const handleAddCar = () => {
@@ -24,6 +27,10 @@ export default function Home() {
 	};
 
 	useEffect(() => {
+		const auth = getAuth();
+		const userId = auth.currentUser?.uid;
+		setUserId(userId);
+		
 		const arr = Array.from({ length: 12 }, (_, i) => ({
 			index: i,
 			name: carInfos[0],

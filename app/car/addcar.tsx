@@ -1,14 +1,16 @@
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
-import { addDoc, collection } from "firebase/firestore";
-import { useState } from 'react';
+import { addDoc, setDoc, collection, doc, arrayUnion, updateDoc } from "firebase/firestore";
+import { useState, useEffect } from 'react';
 import { Image, Pressable, SafeAreaView, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { db } from "../../FirebaseConfig";
+import { getAuth } from '@firebase/auth';
 
 const AddCar = () => {
     const router = useRouter();
     const [image, setImage] = useState<string | null>(null);
+    const [userId, setUserId] = useState<string>("");
     const [openModal, setOpenModal] = useState(false);
     const [carName, setCarName] = useState("");
     const [carYear, setCarYear] = useState("");
@@ -20,21 +22,26 @@ const AddCar = () => {
 		router.back()
 	};
     const handleNextPage = async () => {
-        // will need to handle images later
+        // will need to handle images later AND find a better way to store users' cars (potentially have docs with arrays)
         if(image && carName && carYear && carMake && carModel && mileage) {
             try {
-                await addDoc(collection(db, "cars"), {
+                const userCarRef = doc(db, "cars", userId);
+                const newCar = {
                     name: carName,
                     year: carYear,
                     make: carMake,
                     model: carModel,
                     mileage: mileage,
                     image: image
-                });
+                };
+                await setDoc(userCarRef, {
+                    cars: arrayUnion(newCar)
+                }, { merge: true });
                 alert("New car has been added!")
                 router.push('/(tabs)')
             } catch (error: any) {
                 alert("Error adding car: " + error.message)
+                console.log(error.message)
             }
         } else {
             alert("Fill in the fields!")
@@ -86,6 +93,17 @@ const AddCar = () => {
             throw error;
         }
     }
+
+    useEffect(() => {
+        // need to alter later to use context
+		const auth = getAuth();
+        if (!auth.currentUser) {
+            alert("User not authenticated.");
+            return;
+        }
+		const userId = auth.currentUser.uid;
+		setUserId(userId);
+	}, []);
 
     return (
         <SafeAreaView className="flex-1 bg-white p-4">
