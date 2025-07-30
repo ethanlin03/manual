@@ -11,6 +11,8 @@ import { UserContext } from "./UserContext";
 export default function SignUp() {
     const router = useRouter();
     const [email, setEmail] = useState("");
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
     const [password, setPassword] = useState("");
     const [confirmedPass, setConfirmedPass] = useState("");
     const [passwordVisibility, setPasswordVisibility] = useState(false);
@@ -30,6 +32,8 @@ export default function SignUp() {
 
             await setDoc(doc(db, 'users', user.uid), {
                 email: user.email,
+                firstName: firstName,
+                lastName: lastName,
                 createdAt: serverTimestamp()
             })
             if (userCreds) {
@@ -45,6 +49,26 @@ export default function SignUp() {
         <SafeAreaView className="flex-1 bg-white justify-center items-center">
             <View className="flex flex-col p-10 bg-gray-200 justify-center items-center rounded-2xl gap-6 w-[70vw]">
                 <Text className="text-2xl font-bold">Create an Account</Text>
+                <View className="flex w-full">
+                    <Text className="italic text-gray-600 mb-1 text-sm">First name:</Text>
+                    <TextInput
+                        placeholder="Enter first name..."
+                        placeholderTextColor="#4b5563"
+                        className="p-2 bg-white rounded-lg"
+                        value={firstName}
+                        onChangeText={setFirstName}
+                    />
+                </View>
+                <View className="flex w-full">
+                    <Text className="italic text-gray-600 mb-1 text-sm">Last name:</Text>
+                    <TextInput
+                        placeholder="Enter last name..."
+                        placeholderTextColor="#4b5563"
+                        className="p-2 bg-white rounded-lg"
+                        value={lastName}
+                        onChangeText={setLastName}
+                    />
+                </View>
                 <View className="flex w-full">
                     <Text className="italic text-gray-600 mb-1 text-sm">Email:</Text>
                     <TextInput

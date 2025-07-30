@@ -1,12 +1,14 @@
 import { Image, Pressable, SafeAreaView, ScrollView, View, Text, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { signOut } from "firebase/auth";
-import { auth } from "@/FirebaseConfig";
+import { auth, db } from "@/FirebaseConfig";
 import { useRouter } from 'expo-router';
 import CarCard from '@/components/CarCard_v2';
 import CarImg from '@/assets/images/car.png';
 import * as ImagePicker from 'expo-image-picker';
+import { doc, getDoc } from 'firebase/firestore';
+import { UserContext } from '../UserContext';
 
 type Car = {
 	index: number;
@@ -22,12 +24,24 @@ export default function Profile() {
 	const router = useRouter();
 	const [carArr, setCarArr] = useState<Car[]>([]);
 	const [openModal, setOpenModal] = useState(false);
+	const [firstName, setFirstName] = useState("");
+	const [lastName, setLastName] = useState("");
+	const [userId, setUserId] = useContext(UserContext);
 	const [profilePicture, setProfilePicture] = useState<string | null>(null);
 	const handleProfilePicture = () => {
 		setOpenModal(true);
 	}
 
 	useEffect(() => {
+		const fetchFirstLastName = async () => {
+			const userRef = doc(db, "users", userId);
+			const userSnap = await getDoc(userRef);
+			if(userSnap.exists()) {
+				setFirstName(userSnap.data().firstName);
+				setLastName(userSnap.data().lastName);
+			} 
+		};
+
 		const arr = Array.from({ length: 3 }, (_, i) => ({
 			index: i,
 			name: carInfos[0],
@@ -36,6 +50,7 @@ export default function Profile() {
 			image: CarImg
 		}));
     	setCarArr(arr);
+		fetchFirstLastName();
 	}, []);
 
 	const uploadImage = async (mode: 'gallery' | 'camera') => {
@@ -132,7 +147,7 @@ export default function Profile() {
 								<Ionicons name="camera" size={20} color="#000" />
 							</TouchableOpacity>
 						</View>
-						<Text className="font-bold text-2xl text-[#000]">Ethan Lin</Text>
+						<Text className="font-bold text-2xl text-[#000]">{firstName} {lastName}</Text>
 					</View>
 					{/* Add personal info */}
 					<View className="flex flex-col w-[90vw] mb-2">
