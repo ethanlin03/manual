@@ -1,10 +1,11 @@
 import { ScrollView, Text, View, SafeAreaView } from 'react-native';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { getDoc, doc } from 'firebase/firestore';
 import { db } from '@/FirebaseConfig';
 import { getAuth } from 'firebase/auth';
 import CarCard from '@/components/CarCard';
 import Car from '@/assets/images/car.png';
+import { UserContext } from '../UserContext';
 
 type Car = {
 	index: number;
@@ -16,21 +17,15 @@ type Car = {
 
 export default function History() {
 	const [carArr, setCarArr] = useState<Car[]>([]);
+	const [userId, setUserId] = useContext(UserContext);
 
 	useEffect(() => {
 		const fetchUserCars = async () => {
-			const auth = getAuth();
-			if (!auth.currentUser) {
-				alert("User not authenticated.");
-				return;
-			}
-			const userId = auth.currentUser.uid;
 			const userCarRef = doc(db, "cars", userId);
 			const userCarsSnap = await getDoc(userCarRef);
 			if (userCarsSnap.exists()) {
 				const userCarsArr = userCarsSnap.data().cars || []
 
-				console.log(userCarsArr)
 				const arr = userCarsArr.map((car: any, i: number) => ({
 					index: i,
 					name: car.name,

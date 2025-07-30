@@ -2,21 +2,22 @@ import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
 import { addDoc, setDoc, collection, doc, arrayUnion, updateDoc } from "firebase/firestore";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { Image, Pressable, SafeAreaView, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { db } from "@/FirebaseConfig";
 import { getAuth } from '@firebase/auth';
+import { UserContext } from '../UserContext';
 
 const AddCar = () => {
     const router = useRouter();
     const [image, setImage] = useState<string | null>(null);
-    const [userId, setUserId] = useState<string>("");
     const [openModal, setOpenModal] = useState(false);
     const [carName, setCarName] = useState("");
     const [carYear, setCarYear] = useState("");
     const [carMake, setCarMake] = useState("");
     const [carModel, setCarModel] = useState("");
     const [mileage, setMileage] = useState("");
+    const [userId, setUserId] = useContext(UserContext);
 
     const handleBack = () => {
 		router.back()
@@ -93,17 +94,6 @@ const AddCar = () => {
             throw error;
         }
     }
-
-    useEffect(() => {
-        // need to alter later to use context
-		const auth = getAuth();
-        if (!auth.currentUser) {
-            alert("User not authenticated.");
-            return;
-        }
-		const userId = auth.currentUser.uid;
-		setUserId(userId);
-	}, []);
 
     return (
         <SafeAreaView className="flex-1 bg-white p-4">

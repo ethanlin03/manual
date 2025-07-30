@@ -1,23 +1,27 @@
 import { TouchableOpacity, Text, TextInput, View, SafeAreaView } from "react-native";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { auth } from "@/FirebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import { UserContext } from "./UserContext";
 
 export default function Login() {
     const router = useRouter();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [passwordVisibility, setPasswordVisibility] = useState(false);
+    const [userId, setUserId] = useContext(UserContext);
     const handleVisibility = () => {
         setPasswordVisibility(!passwordVisibility)
     }
     const handleLogin = async () => {
         try {
             const user = await signInWithEmailAndPassword(auth, email, password);
-            if (user) 
+            if (user) {
+                setUserId(user.user.uid);
                 router.replace('/(tabs)')
+            }
         } catch (error: any) {
             console.log("Error:" + error.message)
             alert("Error:" + error.code)

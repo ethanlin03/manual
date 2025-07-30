@@ -1,11 +1,11 @@
 import { ScrollView, Text, TouchableOpacity, View, SafeAreaView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { getDoc, doc } from 'firebase/firestore';
 import { db } from '@/FirebaseConfig';
-import { getAuth } from 'firebase/auth';
 import CarCard from '@/components/CarCard';
+import { UserContext } from '../UserContext';
 
 type Car = {
 	index: number;
@@ -15,11 +15,10 @@ type Car = {
 	image: any; 
 };
 
-const carInfos = ["16_ct2", "2016 Honda Accord", "70,000"];
-
 export default function Home() {
 	const router = useRouter();
 	const [carArr, setCarArr] = useState<Car[]>([]);
+	const [userId, setUserId] = useContext(UserContext);
 
 	const handleAddCar = () => {
 		router.push('/car/addcar');
@@ -27,18 +26,11 @@ export default function Home() {
 
 	useEffect(() => {
 		const fetchUserCars = async () => {
-			const auth = getAuth();
-			if (!auth.currentUser) {
-				alert("User not authenticated.");
-				return;
-			}
-			const userId = auth.currentUser.uid;
 			const userCarRef = doc(db, "cars", userId);
 			const userCarsSnap = await getDoc(userCarRef);
 			if (userCarsSnap.exists()) {
 				const userCarsArr = userCarsSnap.data().cars || []
 
-				console.log(userCarsArr)
 				const arr = userCarsArr.map((car: any, i: number) => ({
 					index: i,
 					name: car.name,

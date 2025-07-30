@@ -1,11 +1,12 @@
 import { TouchableOpacity, Text, TextInput, View, SafeAreaView } from "react-native";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { auth, db } from "@/FirebaseConfig";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { setDoc, doc } from "firebase/firestore";
 import { serverTimestamp } from "firebase/database";
+import { UserContext } from "./UserContext";
 
 export default function SignUp() {
     const router = useRouter();
@@ -14,6 +15,7 @@ export default function SignUp() {
     const [confirmedPass, setConfirmedPass] = useState("");
     const [passwordVisibility, setPasswordVisibility] = useState(false);
     const [confirmedPassVisibility, setConfirmedPassVisibility] = useState(false);
+    const [userId, setUserId] = useContext(UserContext);
     const handleVisibility = () => {
         setPasswordVisibility(!passwordVisibility)
         //small bug where turning on and off visibility resets password
@@ -30,8 +32,10 @@ export default function SignUp() {
                 email: user.email,
                 createdAt: serverTimestamp()
             })
-            if (userCreds) 
+            if (userCreds) {
+                setUserId(userCreds.user.uid)
                 router.replace('/(tabs)')
+            }
         } catch (error: any) {
             console.log("Error:" + error.message)
             alert("Error: " + error.code)
