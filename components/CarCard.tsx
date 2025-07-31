@@ -18,7 +18,7 @@ const CarCard: React.FC<CarCardProps> = ({name, desc, mileage, image, index, ale
         console.log(image)
         router.push({
             pathname: '/history/[id]',
-            params: { id: index.toString() },
+            params: { id: index.toString(), name: encodeURIComponent(name) },
         });
     };
     return (
