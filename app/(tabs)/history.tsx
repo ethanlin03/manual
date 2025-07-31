@@ -1,8 +1,5 @@
 import { ScrollView, Text, View, SafeAreaView } from 'react-native';
 import { useState, useEffect, useContext } from 'react';
-import { getDoc, doc } from 'firebase/firestore';
-import { db } from '@/FirebaseConfig';
-import { getAuth } from 'firebase/auth';
 import CarCard from '@/components/CarCard';
 import Car from '@/assets/images/car.png';
 import { UserContext } from '../UserContext';

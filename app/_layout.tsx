@@ -6,6 +6,7 @@ import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 import UserProvider from './UserContext';
+import CarProvider from './CarContext';
 import "../global.css";
 
 export default function RootLayout() {
@@ -20,12 +21,14 @@ export default function RootLayout() {
 
   return (
     <UserProvider>
-      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <Stack screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="(tabs)" />
-        </Stack>
-        <StatusBar style="auto" />
-      </ThemeProvider>
+      <CarProvider>
+        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+          <Stack screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="(tabs)" />
+          </Stack>
+          <StatusBar style="auto" />
+        </ThemeProvider>
+      </CarProvider>
     </UserProvider>
   );
 }
