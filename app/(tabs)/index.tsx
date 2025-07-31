@@ -14,6 +14,10 @@ export default function Home() {
 	const handleAddCar = () => {
 		router.push('/car/addcar');
 	};
+
+	useEffect(() => {
+		//need to refresh cararr
+	}, []);
   	return (
 		<SafeAreaView className="flex-1 bg-white">
 			<ScrollView className="flex-1 mx-auto p-2">
@@ -27,6 +31,7 @@ export default function Home() {
 							desc={car.desc}
 							mileage={car.mileage}
 							image={car.image}
+							alerts={car.alerts}
 						/>
 					))}
 					{carArr.length > 0 ? (

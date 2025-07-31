@@ -7,8 +7,9 @@ export type Car = {
 	index: number;
 	name: string;
 	desc: string;
-	mileage: string
+	mileage: string;
 	image: any; 
+	alerts: number;
 };
 
 export const CarContext = createContext<[Car[], React.Dispatch<React.SetStateAction<Car[]>>]>([[], () => {}]);
@@ -30,6 +31,7 @@ export default function CarProvider({ children }: { children: React.ReactNode })
 					desc: car.year + " " + car.make + " " + car.model,
 					mileage: car.mileage,
 					image: car.image,
+					alerts: car.alerts
 				}));
 				setCars(arr);
 			}

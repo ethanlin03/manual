@@ -5,24 +5,14 @@ import { signOut } from "firebase/auth";
 import { auth, db } from "@/FirebaseConfig";
 import { useRouter } from 'expo-router';
 import CarCard from '@/components/CarCard_v2';
-import CarImg from '@/assets/images/car.png';
 import * as ImagePicker from 'expo-image-picker';
 import { doc, getDoc } from 'firebase/firestore';
 import { UserContext } from '../UserContext';
-
-type Car = {
-	index: number;
-	name: string;
-	desc: string;
-	mileage: string
-	image: any; 
-};
-
-const carInfos = ["16_ct2", "2016 Honda Accord", "70,000"];
+import { CarContext } from '../CarContext';
 
 export default function Profile() {
 	const router = useRouter();
-	const [carArr, setCarArr] = useState<Car[]>([]);
+	const [carArr, setCarArr] = useContext(CarContext);
 	const [openModal, setOpenModal] = useState(false);
 	const [firstName, setFirstName] = useState("");
 	const [lastName, setLastName] = useState("");
@@ -41,15 +31,6 @@ export default function Profile() {
 				setLastName(userSnap.data().lastName);
 			} 
 		};
-
-		const arr = Array.from({ length: 3 }, (_, i) => ({
-			index: i,
-			name: carInfos[0],
-			desc: carInfos[1],
-			mileage: carInfos[2],
-			image: CarImg
-		}));
-    	setCarArr(arr);
 		fetchFirstLastName();
 	}, []);
 
@@ -166,6 +147,7 @@ export default function Profile() {
 									desc={car.desc}
 									mileage={car.mileage}
 									image={car.image}
+									alerts={car.alerts}
 								/>
 							))}
 						</ScrollView>
@@ -185,6 +167,7 @@ export default function Profile() {
 									desc={car.desc}
 									mileage={car.mileage}
 									image={car.image}
+									alerts={car.alerts}
 								/>
 							))}
 						</ScrollView>
@@ -204,6 +187,7 @@ export default function Profile() {
 									desc={car.desc}
 									mileage={car.mileage}
 									image={car.image}
+									alerts={car.alerts}
 								/>
 							))}
 						</ScrollView>

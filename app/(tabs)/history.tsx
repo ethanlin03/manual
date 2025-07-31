@@ -22,6 +22,7 @@ export default function History() {
 							desc={car.desc}
 							mileage={car.mileage}
 							image={car.image}
+							alerts={car.alerts}
 						/>
 					))}
 				</View>

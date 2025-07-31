@@ -20,7 +20,7 @@ const AddCar = () => {
     const [userId, setUserId] = useContext(UserContext);
 
     const handleBack = () => {
-		router.back()
+		router.push('/(tabs)')
 	};
     const handleNextPage = async () => {
         // will need to handle images later AND find a better way to store users' cars (potentially have docs with arrays)
@@ -33,7 +33,8 @@ const AddCar = () => {
                     make: carMake,
                     model: carModel,
                     mileage: mileage,
-                    image: image
+                    image: image,
+                    alerts: 0
                 };
                 await setDoc(userCarRef, {
                     cars: arrayUnion(newCar)

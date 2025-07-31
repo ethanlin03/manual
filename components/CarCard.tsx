@@ -8,9 +8,10 @@ type CarCardProps = {
     mileage: string;
     image: any;
     index: number;
+    alerts: number;
 }
 
-const CarCard: React.FC<CarCardProps> = ({name, desc, mileage, image, index}) => {
+const CarCard: React.FC<CarCardProps> = ({name, desc, mileage, image, index, alerts}) => {
     const router = useRouter();
 
     const handleCarSelect = () => {
@@ -29,9 +30,9 @@ const CarCard: React.FC<CarCardProps> = ({name, desc, mileage, image, index}) =>
                 <Text className="text-sm italic text-gray-500">{desc}</Text>
                 <Text className="text-sm">{mileage} mi</Text>
             </View>
-            <View className="flex items-center justify-center ml-auto mb-auto w-6 h-6 rounded-full bg-red-400">
-                <Text className="font-semibold text-sm">
-                    3
+            <View className={`flex items-center justify-center ml-auto mb-auto w-6 h-6 rounded-full ${alerts >= 4 ? `bg-red-400` : (alerts >= 2 ? 'bg-yellow-400' : 'bg-green-400')}`}>
+                <Text className="font-semibold text-xs">
+                    {alerts > 9 ? '9+' : alerts}
                 </Text>
             </View>
         </TouchableOpacity>
