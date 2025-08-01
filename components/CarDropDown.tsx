@@ -15,6 +15,7 @@ const CarDropDownMenu = ({car, setCar}: Props) => {
     const [carArr, setCarArr] = useContext(CarContext);
     const [isFocused, setIsFocused] = useState(false);
 	// Need to load correct car image
+	// Need to correctly redirect to that history page for the car when selected
     return (
         <Dropdown
             data={carArr}
