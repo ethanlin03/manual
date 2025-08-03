@@ -3,16 +3,17 @@ import { View, Text } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useEffect, useState } from 'react';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { Car } from '@/app/CarContext';
 
-interface ServiceSectionProps {
-    name: string | string[];
+interface ServiceProps {
+    car?: Car;
 }
 
-export const ServiceSection = ({ name }: ServiceSectionProps) => {
+export const ServiceSection = ({ car }: ServiceProps) => {
     const [height, setHeight] = useState(0);
     useEffect(() => {
-        console.log(name)
-    }, [])
+        console.log(car?.name)
+    }, [car])
 
     return (
         <View
@@ -41,8 +42,8 @@ export const ServiceSection = ({ name }: ServiceSectionProps) => {
             )}
             <View className={`flex flex-col justify-center items-center min-h-[${height}] z-10 `}>
                 {/* Add more services here */}
-                {name === 'Car 1' ? (
-                    <View className="flex flex-row items-center z-10 mt-10 w-full">
+                {car?.name === 'Car 1' ? (
+                    <View className="flex flex-row items-center z-10 w-full">
                         <View className="flex rounded-full bg-white p-2 border left-[5%] mr-10">
                             <Ionicons name='car' size={24} className="self-center"/>
                         </View>
@@ -64,11 +65,11 @@ export const ServiceSection = ({ name }: ServiceSectionProps) => {
                         </View>
                     </View>
                 ) : (
-                    <View className="flex flex-row items-center z-10 mt-10 w-full">
+                    <View className="flex flex-row items-center z-10 w-full">
                         <View className="flex rounded-full bg-white p-2 border left-[5%] mr-10">
                             <Ionicons name='close' size={24} className="self-center" color='red'/>
                         </View>
-                        <View className="flex flex-row items-center justify-between w-[70vw] min-h-[8vh] overflow-hidden p-2 border-b">
+                        <View className="flex flex-row items-center justify-between w-[70vw] min-h-[8vh] overflow-hidden p-2">
                             <View className="flex flex-col items-start">
                                 <Text className="font-semibold text-lg">Currently no service history</Text>
                             </View>

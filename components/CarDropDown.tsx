@@ -7,15 +7,19 @@ import CarImg from "@/assets/images/car.png";
 import type { Car } from "@/app/CarContext";
 
 interface Props {
-	car: Car | null;
+	car?: Car;
 	setCar: (car: Car) => void;
 }
 
 const CarDropDownMenu = ({car, setCar}: Props) => {
     const [carArr, setCarArr] = useContext(CarContext);
     const [isFocused, setIsFocused] = useState(false);
+
+	const handleSelectedCar = (car: Car) => {
+		setCar(car)
+		console.log("Selected car is: " + car.name)
+	}
 	// Need to load correct car image
-	// Need to correctly redirect to that history page for the car when selected
     return (
         <Dropdown
             data={carArr}
@@ -23,7 +27,7 @@ const CarDropDownMenu = ({car, setCar}: Props) => {
             valueField="name"
             labelField="name"
             maxHeight={300}
-            onChange={car => setCar(car)}
+            onChange={(car: Car) => handleSelectedCar(car)}
             search
             searchPlaceholder="Search for car name..."
             placeholder={car ? car.name : "Select car..."}
