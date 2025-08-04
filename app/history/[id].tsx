@@ -172,7 +172,7 @@ export default function HistoryPage() {
 			</View>
 			<ScrollView className="flex-col p-4 mb-10">
 				<View className="flex-1 relative min-h-[65vh] h-auto">
-					<ServiceSection car={car}/>
+					<ServiceSection specificCar={car}/>
 				</View>
 			</ScrollView>
 		</View>

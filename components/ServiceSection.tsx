@@ -9,34 +9,42 @@ import { Car } from '@/app/CarContext';
 import { UserContext } from '@/app/UserContext';
 
 interface ServiceProps {
-    car?: Car;
+    specificCar?: Car;
 }
 
-export const ServiceSection = ({ car }: ServiceProps) => {
+interface Service {
+    typeOfService: string;
+    date: string;
+    items: string;
+    price: string;
+    mileage: string;
+}
+
+export const ServiceSection = ({ specificCar }: ServiceProps) => {
     const [height, setHeight] = useState(0);
     const [userId, setUserId] = useContext(UserContext);
-    const [serviceHistory, setServiceHistory] = useState([]);
+    const [serviceHistory, setServiceHistory] = useState<Service[]>([]);
 
     useEffect(() => {
-        const fetchServices = async(carName: string | undefined) => {
+        const fetchServices = async (carName: string | undefined) => {
             const userDoc = doc(db, "cars", userId)
             const userCarSnap = await getDoc(userDoc)
             if(userCarSnap.exists()) {
                 const data = userCarSnap.data();
 				const cars = data.cars || [];
 
-				const updatedCars = cars.map((car: any) => {
-					if (car.name === car.name) {
+				cars.map((car: any) => {
+					if (car.name === specificCar?.name) {
 						setServiceHistory(car.serviceHistory);
-                        console.log("Car service" + JSON.stringify(car.serviceHistory));
+                        console.log("Car service " + car.name + JSON.stringify(car.serviceHistory));
 					}
 				});
             }
-            console.log(car?.name)
+            console.log(specificCar?.name)
         }
 
-        fetchServices(car?.name)
-    }, [car])
+        fetchServices(specificCar?.name)
+    }, [specificCar])
 
     return (
         <View
@@ -65,24 +73,24 @@ export const ServiceSection = ({ car }: ServiceProps) => {
             )}
             <View className={`flex flex-col justify-center items-center min-h-[${height}] z-10 `}>
                 {/* Add more services here */}
-                {car?.name === 'Car 1' ? (
+                {serviceHistory !== undefined ? (
                     <View className="flex flex-row items-center z-10 w-full">
                         <View className="flex rounded-full bg-white p-2 border left-[5%] mr-10">
                             <Ionicons name='car' size={24} className="self-center"/>
                         </View>
                         <View className="flex flex-row items-center justify-between w-[70vw] min-h-[8vh] overflow-hidden p-2 pb-4 border-b">
                             <View className="flex flex-col items-start">
-                                <Text className="font-semibold text-lg">Specific maintenance</Text>
+                                <Text className="font-semibold text-lg">{serviceHistory[0].typeOfService}</Text>
                                 <View className="flex flex-row items-center">
                                     <FontAwesome5 name="road" size={14} className="mr-2"/>
-                                    <Text>80000 mi</Text>
+                                    <Text>{serviceHistory[0].mileage} mi</Text>
                                 </View>
                             </View>
                             <View className="flex flex-col items-end">
-                                <Text className="italic text-md">07/31/2025</Text>
+                                <Text className="italic text-md">{serviceHistory[0].date}</Text>
                                 <View className="flex flex-row items-center">
                                     <FontAwesome5 name="dollar-sign" size={10} className="mr-1"/>
-                                    <Text className="font-semibold">Price</Text>
+                                    <Text className="font-semibold">{serviceHistory[0].price}</Text>
                                 </View>
                             </View>
                         </View>
