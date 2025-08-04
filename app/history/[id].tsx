@@ -27,6 +27,7 @@ export default function HistoryPage() {
 	const [date, setDate] = useState("");
 	const [addModal, setAddModal] = useState(false);
 	const [removeModal, setRemoveModal] = useState(false);
+	const [removeIcon, setRemoveIcon] = useState(false);
 	const router = useRouter();
 
 	const handleBack = () => {
@@ -84,7 +85,7 @@ export default function HistoryPage() {
 	};
 
 	const removeService = () => {
-		console.log("Removed a service");
+		setRemoveIcon(!removeIcon);
 	};
 
 	useEffect(() => {
@@ -97,6 +98,10 @@ export default function HistoryPage() {
 			}
 		})
 	}, []);
+
+	useEffect(() => {
+		setRemoveIcon(false);
+	}, [car])
 
 	return (
 		<View className="flex-1 bg-white">
@@ -163,7 +168,7 @@ export default function HistoryPage() {
 							<Text className="font-semibold">Add a service</Text>
 							<Ionicons name='add-circle' color="blue"/>
 						</TouchableOpacity>
-						<TouchableOpacity onPress={() => setRemoveModal(true)} className="flex flex-row items-center gap-2 p-2 px-4 bg-white rounded-lg border-red-200 border-2">
+						<TouchableOpacity onPress={removeService} className="flex flex-row items-center gap-2 p-2 px-4 bg-white rounded-lg border-red-200 border-2">
 							<Text className="font-semibold">Remove a service</Text>
 							<Ionicons name='remove-circle' color="red"/>
 						</TouchableOpacity>
@@ -172,7 +177,7 @@ export default function HistoryPage() {
 			</View>
 			<ScrollView className="flex-col p-4 mb-10">
 				<View className="flex-1 relative min-h-[65vh] h-auto">
-					<ServiceSection specificCar={car}/>
+					<ServiceSection specificCar={car} removeService={removeIcon}/>
 				</View>
 			</ScrollView>
 		</View>

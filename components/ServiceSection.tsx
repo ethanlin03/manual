@@ -1,7 +1,8 @@
 import { Svg, Line } from 'react-native-svg';
-import { View, Text } from 'react-native';
+import { View, Text, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useEffect, useState, useContext } from 'react';
+import React from 'react';
 import { getDoc, doc } from 'firebase/firestore';
 import { db } from '@/FirebaseConfig';
 import { FontAwesome5 } from '@expo/vector-icons';
@@ -10,6 +11,7 @@ import { UserContext } from '@/app/UserContext';
 
 interface ServiceProps {
     specificCar?: Car;
+    removeService: boolean;
 }
 
 interface Service {
@@ -20,10 +22,15 @@ interface Service {
     mileage: string;
 }
 
-export const ServiceSection = ({ specificCar }: ServiceProps) => {
+export const ServiceSection = ({ specificCar, removeService }: ServiceProps) => {
     const [height, setHeight] = useState(0);
     const [userId, setUserId] = useContext(UserContext);
     const [serviceHistory, setServiceHistory] = useState<Service[]>([]);
+    // need to correctly update service section after adding it
+
+    const removeSpecifcService = () => {
+        console.log("Removed service");
+    }
 
     useEffect(() => {
         const fetchServices = async (carName: string | undefined) => {
@@ -33,9 +40,9 @@ export const ServiceSection = ({ specificCar }: ServiceProps) => {
                 const data = userCarSnap.data();
 				const cars = data.cars || [];
 
-				cars.map((car: any) => {
+				cars.forEach((car: any) => {
 					if (car.name === specificCar?.name) {
-						setServiceHistory(car.serviceHistory);
+						setServiceHistory(car.serviceHistory || []);
                         console.log("Car service " + car.name + JSON.stringify(car.serviceHistory));
 					}
 				});
@@ -58,7 +65,7 @@ export const ServiceSection = ({ specificCar }: ServiceProps) => {
                 <Svg
                     height={height}
                     width="1"
-                    style={{ position: 'absolute', left: '10%', zIndex: 0 }}
+                    style={{ position: 'absolute', left: removeService && serviceHistory.length > 0 ? "16%" : "10%", zIndex: 0 }}
                 >
                 <Line
                     x1="0"
@@ -71,30 +78,39 @@ export const ServiceSection = ({ specificCar }: ServiceProps) => {
                 />
                 </Svg>
             )}
-            <View className={`flex flex-col justify-center items-center min-h-[${height}] z-10 `}>
+            <View className={`flex flex-col justify-center items-center min-h-[${height}] z-10 gap-10`}>
                 {/* Add more services here */}
-                {serviceHistory !== undefined ? (
-                    <View className="flex flex-row items-center z-10 w-full">
-                        <View className="flex rounded-full bg-white p-2 border left-[5%] mr-10">
-                            <Ionicons name='car' size={24} className="self-center"/>
+                {serviceHistory.length > 0 ? (
+                    serviceHistory.map((specificHistory, index) => (
+                        <View className="flex flex-row items-center z-10 w-full">
+                            {removeService && 
+                                <Pressable onPress={removeSpecifcService}>
+                                    <Ionicons name='remove-circle-outline' size={20} color="red"/>
+                                </Pressable>
+                            }
+                                <React.Fragment key={index}>
+                                    <View className="flex rounded-full bg-white p-2 border left-[5%] mr-10">
+                                        <Ionicons name='car' size={24} className="self-center"/>
+                                    </View>
+                                    <View className="flex flex-row items-center justify-between w-[70vw] min-h-[8vh] overflow-hidden p-2 pb-4 border-b">
+                                        <View className="flex flex-col items-start">
+                                            <Text className="font-semibold text-lg">{specificHistory.typeOfService}</Text>
+                                            <View className="flex flex-row items-center">
+                                                <FontAwesome5 name="road" size={14} className="mr-2"/>
+                                                <Text>{specificHistory.mileage} mi</Text>
+                                            </View>
+                                        </View>
+                                        <View className="flex flex-col items-end">
+                                            <Text className="italic text-md">{specificHistory.date}</Text>
+                                            <View className="flex flex-row items-center">
+                                                <FontAwesome5 name="dollar-sign" size={10} className="mr-1"/>
+                                                <Text className="font-semibold">{specificHistory.price}</Text>
+                                            </View>
+                                        </View>
+                                    </View>
+                                </React.Fragment>
                         </View>
-                        <View className="flex flex-row items-center justify-between w-[70vw] min-h-[8vh] overflow-hidden p-2 pb-4 border-b">
-                            <View className="flex flex-col items-start">
-                                <Text className="font-semibold text-lg">{serviceHistory[0].typeOfService}</Text>
-                                <View className="flex flex-row items-center">
-                                    <FontAwesome5 name="road" size={14} className="mr-2"/>
-                                    <Text>{serviceHistory[0].mileage} mi</Text>
-                                </View>
-                            </View>
-                            <View className="flex flex-col items-end">
-                                <Text className="italic text-md">{serviceHistory[0].date}</Text>
-                                <View className="flex flex-row items-center">
-                                    <FontAwesome5 name="dollar-sign" size={10} className="mr-1"/>
-                                    <Text className="font-semibold">{serviceHistory[0].price}</Text>
-                                </View>
-                            </View>
-                        </View>
-                    </View>
+                    ))
                 ) : (
                     <View className="flex flex-row items-center z-10 w-full">
                         <View className="flex rounded-full bg-white p-2 border left-[5%] mr-10">
