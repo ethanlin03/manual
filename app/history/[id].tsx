@@ -4,15 +4,19 @@ import { Ionicons } from '@expo/vector-icons';
 import { Dropdown } from 'react-native-element-dropdown';
 import { useContext, useEffect, useState } from 'react';
 import { CarContext } from '../CarContext';
+import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { db } from '@/FirebaseConfig';
 import CarImg from '@/assets/images/car.png';
 import CarDropDownMenu from '@/components/CarDropDown';
 import { Car } from '../CarContext';
 import ServiceSection from '@/components/ServiceSection';
+import { UserContext } from '../UserContext';
 
 const data: Number[] = [];
 
 export default function HistoryPage() {
 	const { id, name } = useLocalSearchParams();
+	const [userId, setUserId] = useContext(UserContext);
 	const decodedName = decodeURIComponent(name as string);
 	const [carArr, setCarArr] = useContext(CarContext);
 	const [car, setCar] = useState<Car>();
@@ -29,8 +33,53 @@ export default function HistoryPage() {
 		router.back()
 	};
 
-	const addService = () => {
-		console.log("Added a service");
+	const addService = async () => {
+		if (!typeOfService || !items || !mileage || !price || !date) {
+			alert("Please fill in all fields");
+			return;
+		}
+
+		const newService = {
+			typeOfService,
+			items,
+			mileage,
+			price,
+			date
+		};
+		try {
+			const userCarRef = doc(db, "cars", userId);
+			const userCarSnap = await getDoc(userCarRef);
+
+			if (userCarSnap.exists()) {
+				const data = userCarSnap.data();
+				const cars = data.cars || [];
+
+				const updatedCars = cars.map((car: any) => {
+					if (car.name === decodedName) {
+						return {
+							...car,
+							serviceHistory: [...(car.serviceHistory || []), newService]
+						};
+					}
+					return car;
+				});
+
+				await updateDoc(userCarRef, { cars: updatedCars });
+				alert("Service history added!");
+
+				setTypeOfService("");
+				setItems("");
+				setMileage("");
+				setPrice("");
+				setDate("");
+			} else {
+				alert("No cars found for this user.");
+			}
+		} catch (error: any) {
+			console.error("Error adding service:", error);
+			alert("Error adding service: " + error.message);
+		}
+
 		setAddModal(false);
 	};
 
