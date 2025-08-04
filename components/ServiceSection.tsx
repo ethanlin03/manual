@@ -1,9 +1,12 @@
 import { Svg, Line } from 'react-native-svg';
 import { View, Text } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
+import { getDoc, doc } from 'firebase/firestore';
+import { db } from '@/FirebaseConfig';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { Car } from '@/app/CarContext';
+import { UserContext } from '@/app/UserContext';
 
 interface ServiceProps {
     car?: Car;
@@ -11,8 +14,28 @@ interface ServiceProps {
 
 export const ServiceSection = ({ car }: ServiceProps) => {
     const [height, setHeight] = useState(0);
+    const [userId, setUserId] = useContext(UserContext);
+    const [serviceHistory, setServiceHistory] = useState([]);
+
     useEffect(() => {
-        console.log(car?.name)
+        const fetchServices = async(carName: string | undefined) => {
+            const userDoc = doc(db, "cars", userId)
+            const userCarSnap = await getDoc(userDoc)
+            if(userCarSnap.exists()) {
+                const data = userCarSnap.data();
+				const cars = data.cars || [];
+
+				const updatedCars = cars.map((car: any) => {
+					if (car.name === car.name) {
+						setServiceHistory(car.serviceHistory);
+                        console.log("Car service" + JSON.stringify(car.serviceHistory));
+					}
+				});
+            }
+            console.log(car?.name)
+        }
+
+        fetchServices(car?.name)
     }, [car])
 
     return (
