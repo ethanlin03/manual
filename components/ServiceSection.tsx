@@ -1,9 +1,9 @@
 import { Svg, Line } from 'react-native-svg';
 import { View, Text, Pressable, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useEffect, useState, useContext } from 'react';
+import { useEffect, useState, useContext, Dispatch, SetStateAction } from 'react';
 import React from 'react';
-import { getDoc, doc, onSnapshot } from 'firebase/firestore';
+import { getDoc, doc, onSnapshot, updateDoc } from 'firebase/firestore';
 import { db } from '@/FirebaseConfig';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { Car } from '@/app/CarContext';
@@ -12,7 +12,7 @@ import { UserContext } from '@/app/UserContext';
 interface ServiceProps {
     specificCar?: Car;
     removeService: boolean;
-    setRemoveService: (status: boolean) => {};
+    setRemoveService: Dispatch<SetStateAction<boolean>>;
 }
 
 interface Service {
@@ -51,9 +51,45 @@ export const ServiceSection = ({ specificCar, removeService, setRemoveService }:
         setRemoveService(false);
     }
 
-    const submitServiceRemoval = () => {
-        console.log("submit");
-    }
+    const submitServiceRemoval = async () => {
+        if (!userId || !specificCar) return;
+
+        try {
+            const userDocRef = doc(db, "cars", userId);
+            const docSnap = await getDoc(userDocRef);
+
+            if (docSnap.exists()) {
+                const userData = docSnap.data();
+                const cars = userData.cars || [];
+
+                const updatedCars = cars.map((car: any) => {
+                    if (car.name === specificCar.name) {
+                        const updatedServiceHistory = car.serviceHistory.filter(
+                            (service: Service) =>
+                                !removedServices.some(
+                                    (removed) =>
+                                        removed.typeOfService === service.typeOfService &&
+                                        removed.date === service.date &&
+                                        removed.mileage === service.mileage
+                                )
+                        );
+                        return { ...car, serviceHistory: updatedServiceHistory };
+                    }
+                    return car;
+                });
+
+                await updateDoc(userDocRef, {
+                    cars: updatedCars,
+                });
+
+                console.log("Services successfully removed.");
+                setRemoveService(false);
+                setRemovedServices([]);
+            }
+        } catch (error) {
+            console.error("Error removing services:", error);
+        }
+    };
 
     useEffect(() => {
         if (!specificCar?.name || !userId) return;
