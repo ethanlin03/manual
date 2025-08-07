@@ -9,6 +9,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { doc, getDoc } from 'firebase/firestore';
 import { UserContext } from '../UserContext';
 import { CarContext } from '../CarContext';
+import TempProfilePic from '@/assets/images/profile_pic.jpg';
 
 export default function Profile() {
 	const router = useRouter();
@@ -116,8 +117,9 @@ export default function Profile() {
 					<View className="flex flex-col items-center mt-10 h-[40vh]">
 						<View className="relative mb-4">
 							<View className="border-2 border-gray-500 rounded-full p-1 w-40 h-40 items-center justify-center overflow-hidden">
-								{profilePicture ? (
-									<Image source={{ uri: profilePicture}} className="w-full h-full rounded-full"/>
+								{/* Update later with source={{ uri: profilePicture }} and change !profilePicture to profilePicture */}
+								{!profilePicture ? (
+									<Image source={TempProfilePic} className="w-full h-full rounded-full"/>
 								) : (
 									<View>
 										<Ionicons name="person" size={60} color="#000" />

@@ -103,7 +103,6 @@ export const ServiceSection = ({ specificCar, removeService, setRemoveService }:
                 cars.forEach((car: any) => {
                     if (car.name === specificCar.name) {
                         setServiceHistory(car.serviceHistory || []);
-                        console.log("Live update for car:", car.name, car.serviceHistory);
                     }
                 });
             }
