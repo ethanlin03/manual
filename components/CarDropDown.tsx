@@ -1,10 +1,10 @@
-import { useContext, useState } from "react";
-import { View, Image, StyleSheet } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { Dropdown } from "react-native-element-dropdown";
+import type { Car } from "@/app/CarContext";
 import { CarContext } from "@/app/CarContext";
 import CarImg from "@/assets/images/car.png";
-import type { Car } from "@/app/CarContext";
+import { Ionicons } from "@expo/vector-icons";
+import { useContext, useState } from "react";
+import { Image, StyleSheet } from "react-native";
+import { Dropdown } from "react-native-element-dropdown";
 
 interface Props {
 	car?: Car;

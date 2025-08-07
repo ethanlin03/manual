@@ -2,7 +2,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Image, SafeAreaView, StyleSheet, ScrollView, Text, TouchableOpacity, View, Pressable, TextInput } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Dropdown } from 'react-native-element-dropdown';
-import { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { CarContext } from '../CarContext';
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from '@/FirebaseConfig';
@@ -11,6 +11,7 @@ import CarDropDownMenu from '@/components/CarDropDown';
 import { Car } from '../CarContext';
 import ServiceSection from '@/components/ServiceSection';
 import { UserContext } from '../UserContext';
+import ServiceDropDownMenu from '@/components/ServiceDropDown';
 
 const data: Number[] = [];
 
@@ -26,7 +27,6 @@ export default function HistoryPage() {
 	const [price, setPrice] = useState("");
 	const [date, setDate] = useState("");
 	const [addModal, setAddModal] = useState(false);
-	const [removeModal, setRemoveModal] = useState(false);
 	const [removeIcon, setRemoveIcon] = useState(false);
 	const router = useRouter();
 
@@ -113,13 +113,7 @@ export default function HistoryPage() {
 							<Ionicons name="close" size={20} color="black" />
 						</TouchableOpacity>
 						<View className="flex flex-col justify-between items-center mb-10 mt-6 p-2 gap-6">
-							<TextInput
-								placeholder="Type of service..."
-								placeholderTextColor="black"
-								value={typeOfService}
-								onChangeText={setTypeOfService}
-								className="p-2 bg-gray-200 w-full rounded-lg"
-							/>
+							<ServiceDropDownMenu />
 							<TextInput
 								placeholder="Items replaced or changed..."
 								placeholderTextColor="black"
