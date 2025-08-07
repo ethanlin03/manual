@@ -3,7 +3,7 @@ import { View, Text, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useEffect, useState, useContext } from 'react';
 import React from 'react';
-import { getDoc, doc } from 'firebase/firestore';
+import { getDoc, doc, onSnapshot } from 'firebase/firestore';
 import { db } from '@/FirebaseConfig';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { Car } from '@/app/CarContext';
@@ -26,32 +26,38 @@ export const ServiceSection = ({ specificCar, removeService }: ServiceProps) => 
     const [height, setHeight] = useState(0);
     const [userId, setUserId] = useContext(UserContext);
     const [serviceHistory, setServiceHistory] = useState<Service[]>([]);
-    // need to correctly update service section after adding it
+    const [serviceArr, setServiceArr] = useState([
+		"Oil Change", "Tire Rotation", "Brake Inspection", 
+		"Wheel Alignment", "Spark Plug Replacement", 
+		"Timing Belt Replacement", "Transmission Service"
+	]);
 
     const removeSpecifcService = () => {
         console.log("Removed service");
     }
 
     useEffect(() => {
-        const fetchServices = async (carName: string | undefined) => {
-            const userDoc = doc(db, "cars", userId)
-            const userCarSnap = await getDoc(userDoc)
-            if(userCarSnap.exists()) {
-                const data = userCarSnap.data();
-				const cars = data.cars || [];
+        if (!specificCar?.name || !userId) return;
 
-				cars.forEach((car: any) => {
-					if (car.name === specificCar?.name) {
-						setServiceHistory(car.serviceHistory || []);
-                        console.log("Car service " + car.name + JSON.stringify(car.serviceHistory));
-					}
-				});
+        const userDoc = doc(db, "cars", userId);
+
+        const unsubscribe = onSnapshot(userDoc, (docSnap) => {
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                const cars = data.cars || [];
+
+                cars.forEach((car: any) => {
+                    if (car.name === specificCar.name) {
+                        setServiceHistory(car.serviceHistory || []);
+                        console.log("Live update for car:", car.name, car.serviceHistory);
+                    }
+                });
             }
-            console.log(specificCar?.name)
-        }
+        });
 
-        fetchServices(specificCar?.name)
-    }, [specificCar])
+        return () => unsubscribe();
+
+    }, [specificCar?.name, userId]);
 
     return (
         <View
@@ -89,7 +95,7 @@ export const ServiceSection = ({ specificCar, removeService }: ServiceProps) => 
                                 </Pressable>
                             }
                             <View className="flex rounded-full bg-white p-2 border left-[5%] mr-10">
-                                <Ionicons name='car' size={24} className="self-center"/>
+                                {!serviceArr.includes(specificHistory.typeOfService) ? <Ionicons name='hammer-outline' size={24}/> : <Ionicons name='car' size={24}/> }
                             </View>
                             <View className="flex flex-row items-center justify-between w-[70vw] min-h-[8vh] overflow-hidden p-2 pb-4 border-b">
                                 <View className="flex flex-col items-start">

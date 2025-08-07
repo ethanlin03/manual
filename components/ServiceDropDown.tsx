@@ -6,8 +6,12 @@ import { useContext, useEffect, useState } from "react";
 import { Image, StyleSheet } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 
-const ServiceDropDownMenu = () => {
-	const [service, setService] = useState("");
+interface ServiceProps {
+	typeOfService: string;
+	setTypeOfService: (value: string) => void;
+}
+
+const ServiceDropDownMenu = ({typeOfService, setTypeOfService}: ServiceProps) => {
 	const [searchText, setSearchText] = useState('');
 	const [isFocused, setIsFocused] = useState(false);
 	const [serviceArr, setServiceArr] = useState([
@@ -26,13 +30,13 @@ const ServiceDropDownMenu = () => {
 	];
 
 	useEffect(() => {
-		console.log(service)
-	}, [service])
+		console.log(typeOfService)
+	}, [typeOfService])
 
 	return (
 		<Dropdown
 			data={filteredData}
-			value={service}
+			value={typeOfService}
 			labelField="label"
 			valueField="value"
 			search
@@ -40,9 +44,9 @@ const ServiceDropDownMenu = () => {
 			placeholder="Select or add service..."
 			onChange={(item) => {
 				if (!serviceArr.includes(item.value)) {
-				setServiceArr([...serviceArr, item.value]);
+					setServiceArr([...serviceArr, item.value]);
 				}
-				setService(item.value);
+				setTypeOfService(item.value);
 			}}
 			onChangeText={(text) => setSearchText(text)}
 			style={[

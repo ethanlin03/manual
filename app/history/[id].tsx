@@ -113,7 +113,7 @@ export default function HistoryPage() {
 							<Ionicons name="close" size={20} color="black" />
 						</TouchableOpacity>
 						<View className="flex flex-col justify-between items-center mb-10 mt-6 p-2 gap-6">
-							<ServiceDropDownMenu />
+							<ServiceDropDownMenu typeOfService={typeOfService} setTypeOfService={setTypeOfService}/>
 							<TextInput
 								placeholder="Items replaced or changed..."
 								placeholderTextColor="black"
