@@ -28,6 +28,7 @@ export default function HistoryPage() {
 	const [date, setDate] = useState("");
 	const [addModal, setAddModal] = useState(false);
 	const [removeIcon, setRemoveIcon] = useState(false);
+	const [searchedService, setSearchedService] = useState("");
 	const router = useRouter();
 
 	const handleBack = () => {
@@ -87,6 +88,10 @@ export default function HistoryPage() {
 	const removeService = () => {
 		setRemoveIcon(!removeIcon);
 	};
+
+	const openFilters = () => {
+		console.log("Filters opened on specific car page");
+	}
 
 	useEffect(() => {
 		console.log("Car array updated:", carArr);
@@ -168,6 +173,21 @@ export default function HistoryPage() {
 						</TouchableOpacity>
 					</View>
 				</SafeAreaView>
+			</View>
+			<View className="flex flex-row items-center justify-between w-[90vw] self-center pt-4">
+				<View className="flex-grow flex-row py-2 px-4 rounded-lg bg-gray-200 mr-4">
+					<Ionicons name="search" size={14} color="#888"/>
+					<TextInput
+						placeholder="Search for service..."
+						placeholderTextColor="#888"
+						value={searchedService}
+						onChangeText={setSearchedService}
+						className="ml-2 w-[90%]"
+					/>
+				</View>
+				<TouchableOpacity onPress={openFilters}>
+					<Ionicons name="filter" size={14} color="#888"/>
+				</TouchableOpacity>
 			</View>
 			<ScrollView className="flex-col p-4 mb-10">
 				<View className="flex-1 relative min-h-[65vh] h-auto">

@@ -11,15 +11,15 @@ export default function Track() {
 	return (
 		<SafeAreaView className="flex-1 bg-white">
 			<Text className="font-bold text-2xl ml-10">Track Page</Text>
-			<View className="flex flex-row items-center justify-between  w-[90vw] self-center">
-				<View className="flex-grow flex-row py-2 px-4 rounded-lg bg-gray-200 mr-4">
+			<View className="flex flex-row items-center justify-between w-[90vw] self-center">
+				<View className="flex-grow flex-row py-2 px-4 rounded-lg bg-gray-200 mr-4 w">
 					<Ionicons name="search" size={14} color="#888"/>
 					<TextInput
 						placeholder="Search for car..."
 						placeholderTextColor="#888"
 						value={searchedCar}
 						onChangeText={setSearchedCar}
-						className="ml-2"
+						className="ml-2 w-[90%] "
 					/>
 				</View>
 				<TouchableOpacity onPress={openFilters}>
