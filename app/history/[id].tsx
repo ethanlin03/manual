@@ -1,5 +1,5 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { Image, SafeAreaView, StyleSheet, ScrollView, Text, TouchableOpacity, View, Pressable, TextInput } from 'react-native';
+import { Image, KeyboardAvoidingView, SafeAreaView, StyleSheet, ScrollView, Text, TouchableOpacity, View, Platform, Pressable, TextInput } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Dropdown } from 'react-native-element-dropdown';
 import React, { useContext, useEffect, useState } from 'react';
@@ -111,49 +111,54 @@ export default function HistoryPage() {
 	return (
 		<View className="flex-1 bg-white">
 			{addModal && (
-				<Pressable onPress={() => setAddModal(false)} className="absolute inset-0 bg-black/50 items-center justify-center z-10">
-					<View className="flex flex-col bg-white min-w-[60vw] p-4 rounded-lg">
-						<Text className="self-center text-lg font-semibold">Add service</Text>
-						<TouchableOpacity onPress={() => setAddModal(false)} className="p-2 absolute top-0 right-0">
-							<Ionicons name="close" size={20} color="black" />
-						</TouchableOpacity>
-						<View className="flex flex-col justify-between items-center mb-10 mt-6 p-2 gap-6">
-							<ServiceDropDownMenu typeOfService={typeOfService} setTypeOfService={setTypeOfService}/>
-							<TextInput
-								placeholder="Items replaced or changed..."
-								placeholderTextColor="black"
-								value={items}
-								onChangeText={setItems}
-								className="p-2 bg-gray-200 w-full rounded-lg"
-							/>
-							<TextInput
-								placeholder="Mileage..."
-								placeholderTextColor="black"
-								value={mileage}
-								onChangeText={setMileage}
-								className="p-2 bg-gray-200 w-full rounded-lg"
-							/>
-							<TextInput
-								placeholder="Price..."
-								placeholderTextColor="black"
-								value={price}
-								onChangeText={setPrice}
-								className="p-2 bg-gray-200 w-full rounded-lg"
-							/>
-							<TextInput
-								placeholder="Date..."
-								placeholderTextColor="black"
-								value={date}
-								onChangeText={setDate}
-								className="p-2 bg-gray-200 w-full rounded-lg"
-							/>
-							{/* could add additional notes */}
-						</View>
-						<Pressable onPress={addService} className="absolute bottom-4 right-4 bg-blue-200 p-2 rounded-lg">
-							<Text className="text-sm font-semibold">Submit</Text>
-						</Pressable>
-					</View>
-				</Pressable>
+					<Pressable onPress={() => setAddModal(false)} className="absolute inset-0 bg-black/50 items-center justify-center z-10">
+						<KeyboardAvoidingView
+							className="flex-1 justify-center items-center"
+							behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+						>
+							<View className="flex flex-col bg-white min-w-[60vw] p-4 rounded-lg">
+								<Text className="self-center text-lg font-semibold">Add service</Text>
+								<TouchableOpacity onPress={() => setAddModal(false)} className="p-2 absolute top-0 right-0">
+									<Ionicons name="close" size={20} color="black" />
+								</TouchableOpacity>
+								<View className="flex flex-col justify-between items-center mb-10 mt-6 p-2 gap-6">
+									<ServiceDropDownMenu typeOfService={typeOfService} setTypeOfService={setTypeOfService}/>
+									<TextInput
+										placeholder="Items replaced or changed..."
+										placeholderTextColor="black"
+										value={items}
+										onChangeText={setItems}
+										className="p-2 bg-gray-200 w-full rounded-lg"
+									/>
+									<TextInput
+										placeholder="Mileage..."
+										placeholderTextColor="black"
+										value={mileage}
+										onChangeText={setMileage}
+										className="p-2 bg-gray-200 w-full rounded-lg"
+									/>
+									<TextInput
+										placeholder="Price..."
+										placeholderTextColor="black"
+										value={price}
+										onChangeText={setPrice}
+										className="p-2 bg-gray-200 w-full rounded-lg"
+									/>
+									<TextInput
+										placeholder="Date..."
+										placeholderTextColor="black"
+										value={date}
+										onChangeText={setDate}
+										className="p-2 bg-gray-200 w-full rounded-lg"
+									/>
+									{/* could add additional notes */}
+								</View>
+								<Pressable onPress={addService} className="absolute bottom-4 right-4 bg-blue-200 p-2 rounded-lg">
+									<Text className="text-sm font-semibold">Submit</Text>
+								</Pressable>
+							</View>
+						</KeyboardAvoidingView>
+					</Pressable>
 			)}
 			<View className="flex bg-blue-300">
 				<SafeAreaView>

@@ -3,7 +3,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
 import { addDoc, setDoc, collection, doc, arrayUnion, updateDoc } from "firebase/firestore";
 import { useState, useEffect, useContext } from 'react';
-import { Image, Pressable, SafeAreaView, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Image, KeyboardAvoidingView, Platform, Pressable, SafeAreaView, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { db } from "@/FirebaseConfig";
 import { getAuth } from '@firebase/auth';
 import { UserContext } from '../UserContext';
@@ -117,74 +117,79 @@ const AddCar = () => {
                     </View>
                 </Pressable>
             }
-			<ScrollView className="flex p-4">
-                <TouchableOpacity onPress={handleBack}>
-                    <Ionicons name="arrow-back" size={20}/>
-                </TouchableOpacity>
-                <View className="flex justify-start items-center mb-6">
-                    <Text className="text-2xl font-bold mb-2">Add a new car</Text>
-                    {/* Image selection section */}
-                    <TouchableOpacity onPress={handleImageSelection} className="flex flex-col items-center justify-center w-[90vw] aspect-[16/9] bg-blue-200 rounded-xl border-2 border-blue-400">
-                        {image ? (
-                            <Image
-                                source={{ uri: image }}
-                                className="absolute w-full h-full rounded-xl"
-                                resizeMode="cover"
-                            />
-                        ) : (
-                            <View className="flex flex-col items-center justify-center">
-                                <Ionicons name="image-outline" size={30}/>
-                                <Text className="mt-2 font-semibold">Select an image</Text>
-                            </View>
-                        )}
+            <KeyboardAvoidingView
+                className="flex-1 justify-center items-center"
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            >
+                <ScrollView className="flex p-4">
+                    <TouchableOpacity onPress={handleBack}>
+                        <Ionicons name="arrow-back" size={20}/>
                     </TouchableOpacity>
-                </View>
-                <View className="flex flex-col p-2 min-w-full">
-                    <Text className="text-sm italic mb-1">Car name:</Text>
-                    <TextInput
-                        placeholder="Enter name..."
-                        placeholderTextColor="#888"
-                        value={carName}
-                        onChangeText={setCarName}
-                        className="rounded-lg bg-gray-200 mb-6 p-2 px-4"
-                    />
-                    <Text className="text-sm italic mb-1">Year:</Text>
-                    <TextInput
-                        placeholder="Enter year..."
-                        placeholderTextColor="#888"
-                        value={carYear}
-                        onChangeText={setCarYear}
-                        className="rounded-lg bg-gray-200 mb-6 p-2 px-4"
-                    />
-                    <Text className="text-sm italic mb-1">Make:</Text>
-                    <TextInput
-                        placeholder="Enter make..."
-                        placeholderTextColor="#888"
-                        value={carMake}
-                        onChangeText={setCarMake}
-                        className="rounded-lg bg-gray-200 mb-6 p-2 px-4"
-                    />
-                    <Text className="text-sm italic mb-1">Model:</Text>
-                    <TextInput
-                        placeholder="Enter model..."
-                        placeholderTextColor="#888"
-                        value={carModel}
-                        onChangeText={setCarModel}
-                        className="rounded-lg bg-gray-200 mb-6 p-2 px-4"
-                    />
-                    <Text className="text-sm italic mb-1">Mileage:</Text>
-                    <TextInput
-                        placeholder="Enter mileage..."
-                        placeholderTextColor="#888"
-                        value={mileage}
-                        onChangeText={setMileage}
-                        className="rounded-lg bg-gray-200 mb-6 p-2 px-4"
-                    />
-                    <TouchableOpacity onPress={handleNextPage} className="flex flex-row items-end justify-end">
-                        <Ionicons name="arrow-forward" size={16}/>
-                    </TouchableOpacity>
-                </View>
-            </ScrollView>
+                    <View className="flex justify-start items-center mb-6">
+                        <Text className="text-2xl font-bold mb-2">Add a new car</Text>
+                        {/* Image selection section */}
+                        <TouchableOpacity onPress={handleImageSelection} className="flex flex-col items-center justify-center w-[90vw] aspect-[16/9] bg-blue-200 rounded-xl border-2 border-blue-400">
+                            {image ? (
+                                <Image
+                                    source={{ uri: image }}
+                                    className="absolute w-full h-full rounded-xl"
+                                    resizeMode="cover"
+                                />
+                            ) : (
+                                <View className="flex flex-col items-center justify-center">
+                                    <Ionicons name="image-outline" size={30}/>
+                                    <Text className="mt-2 font-semibold">Select an image</Text>
+                                </View>
+                            )}
+                        </TouchableOpacity>
+                    </View>
+                    <View className="flex flex-col p-2 min-w-full">
+                        <Text className="text-sm italic mb-1">Car name:</Text>
+                        <TextInput
+                            placeholder="Enter name..."
+                            placeholderTextColor="#888"
+                            value={carName}
+                            onChangeText={setCarName}
+                            className="rounded-lg bg-gray-200 mb-6 p-2 px-4"
+                        />
+                        <Text className="text-sm italic mb-1">Year:</Text>
+                        <TextInput
+                            placeholder="Enter year..."
+                            placeholderTextColor="#888"
+                            value={carYear}
+                            onChangeText={setCarYear}
+                            className="rounded-lg bg-gray-200 mb-6 p-2 px-4"
+                        />
+                        <Text className="text-sm italic mb-1">Make:</Text>
+                        <TextInput
+                            placeholder="Enter make..."
+                            placeholderTextColor="#888"
+                            value={carMake}
+                            onChangeText={setCarMake}
+                            className="rounded-lg bg-gray-200 mb-6 p-2 px-4"
+                        />
+                        <Text className="text-sm italic mb-1">Model:</Text>
+                        <TextInput
+                            placeholder="Enter model..."
+                            placeholderTextColor="#888"
+                            value={carModel}
+                            onChangeText={setCarModel}
+                            className="rounded-lg bg-gray-200 mb-6 p-2 px-4"
+                        />
+                        <Text className="text-sm italic mb-1">Mileage:</Text>
+                        <TextInput
+                            placeholder="Enter mileage..."
+                            placeholderTextColor="#888"
+                            value={mileage}
+                            onChangeText={setMileage}
+                            className="rounded-lg bg-gray-200 mb-6 p-2 px-4"
+                        />
+                        <TouchableOpacity onPress={handleNextPage} className="flex flex-row items-end justify-end">
+                            <Ionicons name="arrow-forward" size={16}/>
+                        </TouchableOpacity>
+                    </View>
+                </ScrollView>
+            </KeyboardAvoidingView>
 		</SafeAreaView>
     );
 };
