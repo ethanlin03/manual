@@ -175,7 +175,7 @@ export default function HistoryPage() {
 				</SafeAreaView>
 			</View>
 			<View className="flex flex-row items-center justify-between w-[90vw] self-center pt-4">
-				<View className="flex-grow flex-row py-2 px-4 rounded-lg bg-gray-200 mr-4">
+				<View className="flex flex-row py-2 px-4 rounded-lg bg-gray-200 mr-4">
 					<Ionicons name="search" size={14} color="#888"/>
 					<TextInput
 						placeholder="Search for service..."
