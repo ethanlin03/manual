@@ -18,7 +18,7 @@ const data: Number[] = [];
 export default function HistoryPage() {
 	const { id, name } = useLocalSearchParams();
 	const [userId, setUserId] = useContext(UserContext);
-	const decodedName = decodeURIComponent(name as string);
+	const [decodedName, setDecodedName] = useState(decodeURIComponent(name as string));
 	const [carArr, setCarArr] = useContext(CarContext);
 	const [car, setCar] = useState<Car>();
 	const [typeOfService, setTypeOfService] = useState("");
@@ -106,6 +106,9 @@ export default function HistoryPage() {
 
 	useEffect(() => {
 		setRemoveIcon(false);
+		if(car)
+			setDecodedName(car.name);
+
 	}, [car])
 
 	return (

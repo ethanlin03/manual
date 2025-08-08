@@ -102,15 +102,23 @@ export const ServiceSection = ({ specificCar, removeService, setRemoveService }:
 
                 cars.forEach((car: any) => {
                     if (car.name === specificCar.name) {
-                        setServiceHistory(car.serviceHistory || []);
+                        const sortedHistory = [...(car.serviceHistory || [])].sort((a, b) => {
+                            // Currently sorts date from newest to oldest and based upon date stored being a string
+                            const [aMonth, aDay, aYear] = a.date.split('/').map(Number);
+                            const [bMonth, bDay, bYear] = b.date.split('/').map(Number);
+
+                            return new Date(bYear, bMonth - 1, bDay).getTime() -
+                                new Date(aYear, aMonth - 1, aDay).getTime();
+                        });
+                        setServiceHistory(sortedHistory);
                     }
                 });
             }
         });
 
         return () => unsubscribe();
-
     }, [specificCar?.name, userId]);
+
 
     return (
         <View
