@@ -15,6 +15,11 @@ import ServiceDropDownMenu from '@/components/ServiceDropDown';
 import SortDropDownMenu from '@/components/SortDropDownMenu';
 
 const data: Number[] = [];
+const sortArr = [
+	{ label: "Date", value: "date" },
+	{ label: "Mileage", value: "mileage" },
+	{ label: "Price", value: "price" },
+];
 
 export default function HistoryPage() {
 	const { id, name } = useLocalSearchParams();
@@ -34,11 +39,6 @@ export default function HistoryPage() {
 	const [filter, setFilter] = useState("");
 	const [sortAsc, setSortAsc] = useState(false);
 	const [sortDesc, setSortDesc] = useState(false);
-	const sortArr = [
-        { label: "Date", value: "date" },
-        { label: "Mileage", value: "mileage" },
-        { label: "Price", value: "price" },
-    ];
 	const router = useRouter();
 
 	const handleBack = () => {
@@ -105,10 +105,10 @@ export default function HistoryPage() {
 		setSortDesc(false)
 		setFilter("")
 	};
-	
-	const submitFilter = () => {
-		console.log("filter submitted")
-		handleCloseFilter()
+
+	const submitSearch = () => {
+		console.log("Search submitted")
+		setSearchedService("")
 	};
 
 	useEffect(() => {
@@ -211,7 +211,7 @@ export default function HistoryPage() {
 									</TouchableOpacity>
 								</View>
 							</View>
-							<Pressable onPress={submitFilter} className="absolute bottom-4 right-4 bg-blue-200 p-2 rounded-lg">
+							<Pressable onPress={handleCloseFilter} className="absolute bottom-4 right-4 bg-blue-200 p-2 rounded-lg">
 								<Text className="text-sm font-semibold">Submit</Text>
 							</Pressable>
 						</View>
@@ -245,6 +245,7 @@ export default function HistoryPage() {
 						placeholderTextColor="#888"
 						value={searchedService}
 						onChangeText={setSearchedService}
+						onSubmitEditing={submitSearch}
 						className="ml-2 w-[88%]"
 					/>
 				</View>
@@ -254,7 +255,7 @@ export default function HistoryPage() {
 			</View>
 			<ScrollView className="flex-col p-4 mb-10">
 				<View className="flex-1 relative min-h-[65vh] h-auto">
-					<ServiceSection specificCar={car} removeService={removeIcon} setRemoveService={setRemoveIcon}/>
+					<ServiceSection specificCar={car} removeService={removeIcon} setRemoveService={setRemoveIcon} filter={filter} sortAsc={sortAsc} sortDesc={sortDesc}/>
 				</View>
 			</ScrollView>
 		</View>

@@ -13,6 +13,9 @@ interface ServiceProps {
     specificCar?: Car;
     removeService: boolean;
     setRemoveService: Dispatch<SetStateAction<boolean>>;
+    filter: string;
+    sortAsc: boolean;
+    sortDesc: boolean;
 }
 
 interface Service {
@@ -23,7 +26,7 @@ interface Service {
     mileage: string;
 }
 
-export const ServiceSection = ({ specificCar, removeService, setRemoveService }: ServiceProps) => {
+export const ServiceSection = ({ specificCar, removeService, setRemoveService, filter, sortAsc, sortDesc }: ServiceProps) => {
     const [height, setHeight] = useState(0);
     const [userId, setUserId] = useContext(UserContext);
     const [removedServices, setRemovedServices] = useState<Service[]>([]);
@@ -92,6 +95,32 @@ export const ServiceSection = ({ specificCar, removeService, setRemoveService }:
     };
 
     useEffect(() => {
+        const sorted = [...serviceHistory].sort((a, b) => {
+            let compareValue = 0;
+
+            if (filter === "date") {
+                const [aMonth, aDay, aYear] = a.date.split('/').map(Number);
+                const [bMonth, bDay, bYear] = b.date.split('/').map(Number);
+
+                compareValue =
+                    new Date(aYear, aMonth - 1, aDay).getTime() -
+                    new Date(bYear, bMonth - 1, bDay).getTime();
+            } 
+            else if (filter === "mileage") {
+                compareValue = Number(a.mileage) - Number(b.mileage);
+            } 
+            else if (filter === "price") {
+                compareValue = Number(a.price) - Number(b.price);
+            }
+
+            if (sortDesc) compareValue = -compareValue;
+            return compareValue;
+        });
+
+        setServiceHistory(sorted);
+    }, [sortAsc, sortDesc]);
+
+    useEffect(() => {
         if (!specificCar?.name || !userId) return;
 
         const userDoc = doc(db, "cars", userId);
@@ -118,7 +147,6 @@ export const ServiceSection = ({ specificCar, removeService, setRemoveService }:
 
         return () => unsubscribe();
     }, [specificCar?.name, userId]);
-
 
     return (
         <View
@@ -184,35 +212,35 @@ export const ServiceSection = ({ specificCar, removeService, setRemoveService }:
                                     </View>
                                 </View>
                             );
-
-                        return (
-                            <View className="flex flex-row items-center z-10 w-full" key={index}>
-                                {removeService && 
-                                    <Pressable onPress={() => removeSpecifcService(specificHistory, index)}>
-                                        <Ionicons name='remove-circle-outline' size={20} color="red"/>
-                                    </Pressable>
-                                }
-                                <View className="flex rounded-full bg-white p-2 border left-[5%] mr-10">
-                                    {!serviceArr.includes(specificHistory.typeOfService) ? <Ionicons name='hammer-outline' size={24}/> : <Ionicons name='car' size={24}/> }
-                                </View>
-                                <View className="flex flex-row items-center justify-between w-[70vw] min-h-[8vh] overflow-hidden p-2 pb-4 border-b">
-                                    <View className="flex flex-col items-start">
-                                        <Text className="font-semibold text-lg">{specificHistory.typeOfService}</Text>
-                                        <View className="flex flex-row items-center">
-                                            <FontAwesome5 name="road" size={14} className="mr-2"/>
-                                            <Text>{specificHistory.mileage} mi</Text>
+                        else 
+                            return (
+                                <View className="flex flex-row items-center z-10 w-full" key={index}>
+                                    {removeService && 
+                                        <Pressable onPress={() => removeSpecifcService(specificHistory, index)}>
+                                            <Ionicons name='remove-circle-outline' size={20} color="red"/>
+                                        </Pressable>
+                                    }
+                                    <View className="flex rounded-full bg-white p-2 border left-[5%] mr-10">
+                                        {!serviceArr.includes(specificHistory.typeOfService) ? <Ionicons name='hammer-outline' size={24}/> : <Ionicons name='car' size={24}/> }
+                                    </View>
+                                    <View className="flex flex-row items-center justify-between w-[70vw] min-h-[8vh] overflow-hidden p-2 pb-4 border-b">
+                                        <View className="flex flex-col items-start">
+                                            <Text className="font-semibold text-lg">{specificHistory.typeOfService}</Text>
+                                            <View className="flex flex-row items-center">
+                                                <FontAwesome5 name="road" size={14} className="mr-2"/>
+                                                <Text>{specificHistory.mileage} mi</Text>
+                                            </View>
+                                        </View>
+                                        <View className="flex flex-col items-end">
+                                            <Text className="italic text-md">{specificHistory.date}</Text>
+                                            <View className="flex flex-row items-center">
+                                                <FontAwesome5 name="dollar-sign" size={10} className="mr-1"/>
+                                                <Text className="font-semibold">{specificHistory.price}</Text>
+                                            </View>
                                         </View>
                                     </View>
-                                    <View className="flex flex-col items-end">
-                                        <Text className="italic text-md">{specificHistory.date}</Text>
-                                        <View className="flex flex-row items-center">
-                                            <FontAwesome5 name="dollar-sign" size={10} className="mr-1"/>
-                                            <Text className="font-semibold">{specificHistory.price}</Text>
-                                        </View>
-                                    </View>
                                 </View>
-                            </View>
-                        );
+                            );
                     })
                 ) : (
                     <View className="flex flex-row items-center z-10 w-full">
