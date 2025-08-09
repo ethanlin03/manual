@@ -1,20 +1,41 @@
-import { ScrollView, Text, TextInput, View, SafeAreaView, KeyboardAvoidingView, Platform, TouchableOpacity } from 'react-native';
+import { ActivityIndicator, ScrollView, Text, TextInput, View, SafeAreaView, KeyboardAvoidingView, Platform, TouchableOpacity } from 'react-native';
 import { useState, useEffect, useContext, useRef } from 'react';
 import { Ionicons } from '@expo/vector-icons';
-import CarCard from '@/components/CarCard';
-import Car from '@/assets/images/car.png';
+import { GoogleGenAI } from '@google/genai';
 
-const fillerResponse = "This is a filler response: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+//const fillerResponse = "This is a filler response: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+const ai = new GoogleGenAI({ apiKey: process.env.EXPO_PUBLIC_GEMINI_API_KEY });
 
 export default function Assistant() {
 	const [searchQuery, setSearchQuery] = useState("");
 	const [searchHistory, setSearchHistory] = useState<string[]>([]);
 	const [sidebar, setSidebar] = useState(false);
+	const [thinking, setThinking] = useState(false);
 	const scrollRef = useRef<ScrollView | null>(null);
 
-	const submitSearch = () => {
-		setSearchHistory([...searchHistory, searchQuery])
-		setSearchQuery("")
+	const submitSearch = async () => {
+		if (!searchQuery.trim()) return;
+
+		// Add the user message to history first
+		setSearchQuery("");
+		setSearchHistory(prev => [...prev, searchQuery]);
+		setThinking(true);
+
+		try {
+			const result = await ai.models.generateContent({
+				model: "gemini-2.5-flash",
+				contents: searchQuery
+			});
+			const responseText = result.text;
+
+			// Add Gemini’s reply to the history
+			setSearchHistory(prev => [...prev, `🤖 ${responseText}`]);
+		} catch (err) {
+			console.error(err);
+			setSearchHistory(prev => [...prev, "⚠ Error: Could not fetch response"]);
+		}
+
+		setThinking(false);
 	}
 
 	useEffect(() => {
@@ -50,21 +71,23 @@ export default function Assistant() {
 									<Text className="text-gray-400">No messages yet — ask something!</Text>
 								</View>
 							) : (
-								searchHistory.map((search, index) => (
-									<View key={index} className="p-4">
-										<View className="items-end">
-											<View className="bg-gray-200 p-3 border border-gray-400 rounded-lg max-w-[80%]">
-											<Text className="text-sm">{search}</Text>
+								<>
+									{searchHistory.map((msg, idx) => (
+										<View key={idx} className={`p-4 ${msg.startsWith("🤖") ? "items-start" : "items-end"}`}>
+											<View className={`p-3 rounded-lg border ${msg.startsWith("🤖") ? "bg-white" : "bg-gray-200"}`}>
+												<Text>{msg.replace(/^🤖 /, "")}</Text>
 											</View>
 										</View>
-
-										<View className="mt-3">
-											<View className="bg-white p-3 border border-gray-200 rounded-lg max-w-[90%]">
-											<Text className="text-sm">{fillerResponse}</Text>
+									))}
+									{thinking && (
+										<View className="p-4 items-start">
+											<View className="p-3 rounded-lg border bg-white flex-row items-center">
+											<ActivityIndicator size="small" color="#666" />
+											<Text className="ml-2 italic text-gray-600">Thinking...</Text>
 											</View>
 										</View>
-									</View>
-								))
+									)}
+								</>
 						)}
 					</ScrollView>
 					<View className="border-t border-gray-300 px-4 py-4 w-full">
@@ -77,8 +100,8 @@ export default function Assistant() {
 								onChangeText={setSearchQuery}
 								className="ml-2 flex-1"
 							/>
-							<TouchableOpacity className={`p-1 ${searchQuery.length > 0 ? 'bg-white' : 'bg-transparent'} rounded-full border border-[#888]`} onPress={submitSearch}>
-								<Ionicons name='arrow-up-outline' size={14} color="#888"/>
+							<TouchableOpacity className={`p-1 ${searchQuery.length > 0 ? 'bg-white' : 'bg-transparent border-[#888]'} rounded-full border`} onPress={submitSearch}>
+								<Ionicons name='arrow-up-outline' size={14} color={`${searchQuery.length > 0 ? "black" : "#888"}`}/>
 							</TouchableOpacity>
 						</View>
 					</View>
