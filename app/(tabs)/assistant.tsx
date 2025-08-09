@@ -1,4 +1,4 @@
-import { ActivityIndicator, ScrollView, Text, TextInput, View, SafeAreaView, KeyboardAvoidingView, Platform, TouchableOpacity } from 'react-native';
+import { ActivityIndicator, ScrollView, Text, TextInput, View, SafeAreaView, KeyboardAvoidingView, Platform, Pressable, TouchableOpacity } from 'react-native';
 import { useState, useEffect, useContext, useRef } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { GoogleGenAI } from '@google/genai';
@@ -61,9 +61,21 @@ export default function Assistant() {
 						</TouchableOpacity>
 					</View>
 					{sidebar && (
-						<View className="">
-							<Text>hey</Text>
-						</View>
+						<Pressable
+							className="absolute inset-0 z-50"
+							onPress={() => setSidebar(false)}
+						>
+							<View className="flex-1 bg-[rgba(0,0,0,0.35)] z-60">
+								<View className="flex-1 w-[60vw] h-full bg-white p-4">
+									<View className="flex flex-row justify-between">
+										<Text className="font-bold text-lg">Menu</Text>
+										<TouchableOpacity onPress={() => setSidebar(false)}>
+											<Ionicons name="chevron-back-outline" size={24}/>
+										</TouchableOpacity>
+									</View>
+								</View>
+							</View>
+						</Pressable>
 					)}
 					<ScrollView ref={scrollRef} className="flex-1 max-h-[75%]" contentContainerStyle={{ flexGrow: 1, paddingBottom: 8 }} keyboardShouldPersistTaps="handled">
 						{searchHistory.length === 0 ? (
