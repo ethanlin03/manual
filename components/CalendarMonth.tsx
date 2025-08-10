@@ -1,33 +1,50 @@
 import { Pressable, View, Text } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import React from "react";
+import React, { useEffect, useState, useMemo } from "react";
 
 const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
 // monthIdx is 0-based
-const CalendarMonth = ({year, monthIdx} : {year: number, monthIdx: number}) => {
-    const currMonthName = monthNames[monthIdx];
-    const daysInMonth = new Date(year, monthIdx + 1, 0).getDate();
-    const firstDay = new Date(year, monthIdx, 1).getDay(); // 0 indexed for days (Sunday is first)
-    const calendarDays: {day: number, emptyDay: boolean}[] = [];
+const CalendarMonth = ({ initialYear, initialMonthIdx }: { initialYear: number, initialMonthIdx: number }) => {
+    const [year, setYear] = useState(() => initialYear);
+    const [monthIdx, setMonthIdx] = useState(() => initialMonthIdx); // 0-based
 
-    for(let i = 0; i < firstDay; i++)
-        calendarDays.push({ day: 0, emptyDay: true })
+    const calendarDays = useMemo(() => {
+        const daysInMonth = new Date(year, monthIdx + 1, 0).getDate();
+        const firstDay = new Date(year, monthIdx, 1).getDay(); // Sunday = 0
+        const days: { day: number; emptyDay: boolean }[] = [];
 
-    for(let day = 1; day <= daysInMonth; day++)
-        calendarDays.push({ day, emptyDay: false})
+        for (let i = 0; i < firstDay; i++) {
+            days.push({ day: 0, emptyDay: true });
+        }
 
-    const remainingDays = (7 - (calendarDays.length % 7)) & 7;
-    for(let i = 0; i < remainingDays; i++)
-        calendarDays.push({ day: 0, emptyDay: true })
+        for (let day = 1; day <= daysInMonth; day++) {
+            days.push({ day, emptyDay: false });
+        }
+
+        const remainingDays = (7 - (days.length % 7)) % 7;
+        for (let i = 0; i < remainingDays; i++) {
+            days.push({ day: 0, emptyDay: true });
+        }
+
+        return days;
+    }, [year, monthIdx]);
 
     const handlePrevMonth = () => {
-        console.log("Previous month");
-    }
+        if (monthIdx === 0) {
+            setMonthIdx(11);
+            setYear((prev) => prev - 1);
+        } else
+            setMonthIdx((prev) => prev - 1);
+    };
 
     const handleNextMonth = () => {
-        console.log("Next month");
-    }
+        if (monthIdx === 11) {
+            setMonthIdx(0);
+            setYear((prev) => prev + 1);
+        } else
+            setMonthIdx((prev) => prev + 1);
+    };
 
     return (
         <View className="flex-1 p-4">
@@ -37,7 +54,7 @@ const CalendarMonth = ({year, monthIdx} : {year: number, monthIdx: number}) => {
                         <Ionicons name="arrow-back-outline"/>
                     </Pressable>
                     <Text className="text-xl font-bold text-center">
-                        {currMonthName} {year}
+                        {monthNames[monthIdx]} {year}
                     </Text>
                     <Pressable onPress={handleNextMonth}>
                         <Ionicons name="arrow-forward-outline"/>

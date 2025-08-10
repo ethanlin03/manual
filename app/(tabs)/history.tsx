@@ -12,7 +12,7 @@ export default function History() {
         <SafeAreaView className="flex-1 bg-white">
 			<ScrollView className="flex-1 mx-auto p-2">
 				<Text className="font-bold text-2xl">History Page</Text>
-				<CalendarMonth year={2025} monthIdx={7}/>
+				<CalendarMonth initialYear={2025} initialMonthIdx={7}/>
 			</ScrollView>
 		</SafeAreaView>
     );
