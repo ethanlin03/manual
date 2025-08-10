@@ -1,15 +1,19 @@
 import { Pressable, View, Text } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useState, useMemo } from "react";
+import ServiceSection from "./ServiceSection";
 
 const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-// monthIdx is 0-based
+// monthIdx is 0-indexed
 const CalendarMonth = ({ initialYear, initialMonthIdx }: { initialYear: number, initialMonthIdx: number }) => {
+    const currDay = new Date().getDate();
+    const currMonth = new Date().getMonth(); // 0-indexed
     const [year, setYear] = useState(() => initialYear);
-    const [monthIdx, setMonthIdx] = useState(() => initialMonthIdx); // 0-based
+    const [monthIdx, setMonthIdx] = useState(() => initialMonthIdx); // 0-indexed
 
     const calendarDays = useMemo(() => {
+        console.log(currMonth, currDay);
         const daysInMonth = new Date(year, monthIdx + 1, 0).getDate();
         const firstDay = new Date(year, monthIdx, 1).getDay(); // Sunday = 0
         const days: { day: number; emptyDay: boolean }[] = [];
@@ -76,19 +80,31 @@ const CalendarMonth = ({ initialYear, initialMonthIdx }: { initialYear: number, 
                         {calendarDays
                             .slice(rowIndex * 7, (rowIndex + 1) * 7)
                             .map((item, colIndex) => (
-                            <View
-                                key={`day-${rowIndex}-${colIndex}`}
-                                className="flex-1 h-12 justify-end items-end border border-gray-300 p-1"
-                            >
-                                {!item.emptyDay && (
-                                    <Text className="text-sm font-semibold">{item.day}</Text>
-                                )}
-                            </View>
+                                ((monthIdx === currMonth && item.day === currDay) ? (
+                                <View
+                                    key={`day-${rowIndex}-${colIndex}`}
+                                    className="flex-1 h-12 justify-end items-end border-2 border-blue-300 p-1"
+                                >
+                                    {!item.emptyDay && (
+                                        <Text className="text-sm font-semibold">{item.day}</Text>
+                                    )}
+                                </View>
+                                ) : (
+                                <View
+                                    key={`day-${rowIndex}-${colIndex}`}
+                                    className="flex-1 h-12 justify-end items-end border border-gray-300 p-1"
+                                >
+                                    {!item.emptyDay && (
+                                        <Text className="text-sm font-semibold">{item.day}</Text>
+                                    )}
+                                </View>
+                                ))  
                             ))}
                         </View>
                     ))}
                 </View>
             </View>
+            {/* service section */}
         </View>
     );
 };
