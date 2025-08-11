@@ -83,10 +83,12 @@ const CalendarMonth = ({ initialYear, initialMonthIdx }: { initialYear: number, 
                                 ((monthIdx === currMonth && item.day === currDay) ? (
                                 <View
                                     key={`day-${rowIndex}-${colIndex}`}
-                                    className="flex-1 h-12 justify-end items-end border-2 border-blue-300 p-1"
+                                    className="flex-1 h-12 justify-end items-end border border-blue-500 p-1"
                                 >
                                     {!item.emptyDay && (
-                                        <Text className="text-sm font-semibold">{item.day}</Text>
+                                        <View className="bg-blue-400 rounded-full aspect-square">
+                                            <Text className="text-sm font-semibold self-center">{item.day}</Text>
+                                        </View>
                                     )}
                                 </View>
                                 ) : (
