@@ -51,7 +51,7 @@ const CalendarMonth = ({ initialYear, initialMonthIdx }: { initialYear: number, 
     };
 
     return (
-        <View className="flex-1 p-4">
+        <View className="p-4">
             <View className="border border-gray-400 p-4 rounded-lg">
                 <View className="flex flex-row items-center justify-between mb-4">
                     <Pressable onPress={handlePrevMonth}>

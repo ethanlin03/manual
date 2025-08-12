@@ -65,78 +65,80 @@ export default function History() {
 
     return (
         <SafeAreaView className="flex-1 bg-white">
-			<ScrollView className="flex-1 mx-auto p-2">
-				<Text className="font-bold text-2xl">History Page</Text>
-				<CalendarMonth initialYear={2025} initialMonthIdx={7}/>
-				<View
-					style={{ flex: 1 }}
-					onLayout={(event) => {
-						const { height } = event.nativeEvent.layout;
-						setHeight(height);
-					}}
-				>
-					{height > 0 && (
-						<Svg
-							height={height}
-							width="1"
-							style={{ position: 'absolute', left: "10%", zIndex: 0 }}
-						>
-						<Line
-							x1="0"
-							y1="0"
-							x2="0"
-							y2={height}
-							stroke="black"
-							strokeWidth="3"
-							strokeDasharray="4, 6"
-						/>
-						</Svg>
-					)}
-					<View className={`flex flex-col justify-center items-center min-h-[${height}] z-10 gap-10`}>
-						{/* Add more services here */}
-						{overallServiceHist.length > 0 ? (
-							overallServiceHist.map((specificHistory, index) => {
-									return (
-										<View className="flex flex-row items-center z-10 w-full" key={index}>
-											<View className="flex rounded-full bg-white p-2 border left-[5%] mr-10">
-												{!serviceArr.includes(specificHistory.typeOfService) ? <Ionicons name='hammer-outline' size={24}/> : <Ionicons name='car' size={24}/> }
-											</View>
-											<View className="flex flex-row items-center justify-between w-[70vw] min-h-[8vh] overflow-hidden p-2 pb-4 border-b">
-												<View className="flex flex-col items-start">
-													<Text className="font-semibold text-lg">{specificHistory.typeOfService}</Text>
-													<View className="flex flex-row items-center">
-														<FontAwesome5 name="road" size={14} className="mr-2"/>
-														<Text>{specificHistory.mileage} mi</Text>
+			<View className="flex-1 mx-auto p-2">
+				<View className="flex items-center mb-4">
+					<CalendarMonth initialYear={2025} initialMonthIdx={7}/>
+				</View>
+				<ScrollView className='flex-1'>
+					<View
+						style={{ flex: 1 }}
+						onLayout={(event) => {
+							const { height } = event.nativeEvent.layout;
+							setHeight(height);
+						}}
+					>
+						{height > 0 && (
+							<Svg
+								height={height}
+								width="1"
+								style={{ position: 'absolute', left: "10%", zIndex: 0 }}
+							>
+							<Line
+								x1="0"
+								y1="0"
+								x2="0"
+								y2={height}
+								stroke="black"
+								strokeWidth="3"
+								strokeDasharray="4, 6"
+							/>
+							</Svg>
+						)}
+							<View className={`flex flex-col justify-center items-center min-h-[${height}] z-10 gap-10 mb-20`}>
+								{/* Add more services here */}
+								{overallServiceHist.length > 0 ? (
+									overallServiceHist.map((specificHistory, index) => {
+											return (
+												<View className="flex flex-row items-center z-10 w-full" key={index}>
+													<View className="flex rounded-full bg-white p-2 border left-[5%] mr-10">
+														{!serviceArr.includes(specificHistory.typeOfService) ? <Ionicons name='hammer-outline' size={24}/> : <Ionicons name='car' size={24}/> }
+													</View>
+													<View className="flex flex-row items-center justify-between w-[70vw] min-h-[8vh] overflow-hidden p-2 pb-4 border-b">
+														<View className="flex flex-col items-start">
+															<Text className="font-semibold text-lg">{specificHistory.typeOfService}</Text>
+															<View className="flex flex-row items-center">
+																<FontAwesome5 name="road" size={14} className="mr-2"/>
+																<Text>{specificHistory.mileage} mi</Text>
+															</View>
+														</View>
+														<View className="flex flex-col items-end">
+															<Text className="italic text-md">{specificHistory.date}</Text>
+															<View className="flex flex-row items-center">
+																<FontAwesome5 name="dollar-sign" size={10} className="mr-1"/>
+																<Text className="font-semibold">{specificHistory.price}</Text>
+															</View>
+														</View>
 													</View>
 												</View>
-												<View className="flex flex-col items-end">
-													<Text className="italic text-md">{specificHistory.date}</Text>
-													<View className="flex flex-row items-center">
-														<FontAwesome5 name="dollar-sign" size={10} className="mr-1"/>
-														<Text className="font-semibold">{specificHistory.price}</Text>
-													</View>
-												</View>
+											);
+									})
+								) : (
+									<View className="flex flex-row items-center z-10 w-full">
+										<View className="flex rounded-full bg-white p-2 border left-[5%] mr-10">
+											<Ionicons name='close' size={24} className="self-center" color='red'/>
+										</View>
+										<View className="flex flex-row items-center justify-between w-[70vw] min-h-[8vh] overflow-hidden p-2">
+											<View className="flex flex-col items-start">
+												<Text className="font-semibold text-lg">Currently no service history</Text>
 											</View>
 										</View>
-									);
-							})
-						) : (
-							<View className="flex flex-row items-center z-10 w-full">
-								<View className="flex rounded-full bg-white p-2 border left-[5%] mr-10">
-									<Ionicons name='close' size={24} className="self-center" color='red'/>
-								</View>
-								<View className="flex flex-row items-center justify-between w-[70vw] min-h-[8vh] overflow-hidden p-2">
-									<View className="flex flex-col items-start">
-										<Text className="font-semibold text-lg">Currently no service history</Text>
 									</View>
-								</View>
+								)}
+								{/* No services template */}
 							</View>
-						)}
-						{/* No services template */}
-						
 					</View>
-				</View>
-			</ScrollView>
+				</ScrollView>
+			</View>
 		</SafeAreaView>
     );
 }
