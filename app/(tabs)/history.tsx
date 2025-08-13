@@ -1,4 +1,4 @@
-import { ScrollView, Text, View, SafeAreaView } from 'react-native';
+import { Dimensions, ScrollView, Text, View, SafeAreaView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Svg, Line } from 'react-native-svg';
 import { useState, useEffect, useContext } from 'react';
@@ -20,6 +20,7 @@ interface Service {
 
 export default function History() {
 	const [height, setHeight] = useState(0);
+	const [currDate, setCurrDate] = useState(new Date());
 	const [carArr, setCarArr] = useContext(CarContext);
 	const [userId, setUserId] = useContext(UserContext);
 	const [overallServiceHist, setOverallServiceHist] = useState<Service[]>([]);
@@ -46,18 +47,20 @@ export default function History() {
 					}))
 				);
 
-				const sortedHistory = allHistory.sort((a: Service, b: Service) => {
+				const matchedHistory = allHistory.filter((a: Service) => {
 					const [aMonth, aDay, aYear] = a.date.split('/').map(Number);
-					const [bMonth, bDay, bYear] = b.date.split('/').map(Number);
-
-					return new Date(bYear, bMonth - 1, bDay).getTime() -
-						new Date(aYear, aMonth - 1, aDay).getTime();
+					const year = aYear < 100 ? 2000 + aYear : aYear;
+					const historyDate = new Date(year, aMonth - 1, aDay);
+					historyDate.setHours(0, 0, 0, 0);
+					
+					return historyDate.getTime() === currDate.getTime();
 				});
 
-				setOverallServiceHist(sortedHistory);
+				setOverallServiceHist(matchedHistory);
 			}
 		});
 		console.log(overallServiceHist);
+		console.log(currDate);
 
 		return () => unsubscribe();
 	}, []);
@@ -67,9 +70,9 @@ export default function History() {
         <SafeAreaView className="flex-1 bg-white">
 			<View className="flex-1 mx-auto p-2">
 				<View className="flex items-center mb-4">
-					<CalendarMonth initialYear={2025} initialMonthIdx={7}/>
+					<CalendarMonth initialYear={currDate.getFullYear()} initialMonthIdx={currDate.getMonth()}/>
 				</View>
-				<ScrollView className='flex-1'>
+				<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
 					<View
 						style={{ flex: 1 }}
 						onLayout={(event) => {
@@ -79,7 +82,7 @@ export default function History() {
 					>
 						{height > 0 && (
 							<Svg
-								height={height}
+								height="100%"
 								width="1"
 								style={{ position: 'absolute', left: "10%", zIndex: 0 }}
 							>
