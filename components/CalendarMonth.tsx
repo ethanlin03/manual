@@ -1,12 +1,15 @@
 import { Pressable, View, Text } from "react-native";
+import { Dispatch, SetStateAction } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useState, useMemo } from "react";
 import ServiceSection from "./ServiceSection";
 
 const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
+// need to have current date selected highlighted
+
 // monthIdx is 0-indexed
-const CalendarMonth = ({ initialYear, initialMonthIdx }: { initialYear: number, initialMonthIdx: number }) => {
+const CalendarMonth = ({ initialYear, initialMonthIdx, setCurrDate }: { initialYear: number, initialMonthIdx: number, setCurrDate: Dispatch<SetStateAction<Date>> }) => {
     const currDay = new Date().getDate();
     const currMonth = new Date().getMonth(); // 0-indexed
     const [year, setYear] = useState(() => initialYear);
@@ -80,27 +83,40 @@ const CalendarMonth = ({ initialYear, initialMonthIdx }: { initialYear: number, 
                         {calendarDays
                             .slice(rowIndex * 7, (rowIndex + 1) * 7)
                             .map((item, colIndex) => (
-                                ((monthIdx === currMonth && item.day === currDay) ? (
-                                <View
-                                    key={`day-${rowIndex}-${colIndex}`}
-                                    className="flex-1 h-12 justify-end items-end border border-blue-500 p-1"
-                                >
-                                    {!item.emptyDay && (
-                                        <View className="bg-blue-400 rounded-full aspect-square">
-                                            <Text className="text-sm font-semibold self-center">{item.day}</Text>
+                                (monthIdx === currMonth && item.day === currDay) ? (
+                                    <Pressable
+                                        key={`day-${rowIndex}-${colIndex}`}
+                                        className="flex-1"
+                                        onPress={() => {
+                                        if (!item.emptyDay)
+                                            setCurrDate(new Date(year, monthIdx, item.day));
+                                        }}
+                                    >
+                                        <View className="h-12 justify-end items-end border border-blue-500 p-1">
+                                            {!item.emptyDay && (
+                                                <View className="bg-blue-400 rounded-full aspect-square justify-center items-center">
+                                                    <Text className="text-sm font-semibold">{item.day}</Text>
+                                                </View>
+                                            )}
                                         </View>
-                                    )}
-                                </View>
-                                ) : (
-                                <View
-                                    key={`day-${rowIndex}-${colIndex}`}
-                                    className="flex-1 h-12 justify-end items-end border border-gray-300 p-1"
-                                >
-                                    {!item.emptyDay && (
-                                        <Text className="text-sm font-semibold">{item.day}</Text>
-                                    )}
-                                </View>
-                                ))  
+                                    </Pressable>
+                                    ) : (
+                                    <Pressable
+                                        key={`day-${rowIndex}-${colIndex}`}
+                                        className="flex-1"
+                                        onPress={() => {
+                                        if (!item.emptyDay) {
+                                            setCurrDate(new Date(year, monthIdx, item.day));
+                                        }
+                                        }}
+                                    >
+                                        <View className="h-12 justify-end items-end border border-gray-300 p-1">
+                                            {!item.emptyDay && (
+                                                <Text className="text-sm font-semibold">{item.day}</Text>
+                                            )}
+                                        </View>
+                                    </Pressable>
+                                )
                             ))}
                         </View>
                     ))}

@@ -63,14 +63,14 @@ export default function History() {
 		console.log(currDate);
 
 		return () => unsubscribe();
-	}, []);
+	}, [currDate]);
 
 
     return (
         <SafeAreaView className="flex-1 bg-white">
 			<View className="flex-1 mx-auto p-2">
 				<View className="flex items-center mb-4">
-					<CalendarMonth initialYear={currDate.getFullYear()} initialMonthIdx={currDate.getMonth()}/>
+					<CalendarMonth initialYear={currDate.getFullYear()} initialMonthIdx={currDate.getMonth()} setCurrDate={setCurrDate}/>
 				</View>
 				<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
 					<View
@@ -132,7 +132,7 @@ export default function History() {
 										</View>
 										<View className="flex flex-row items-center justify-between w-[70vw] min-h-[8vh] overflow-hidden p-2">
 											<View className="flex flex-col items-start">
-												<Text className="font-semibold text-lg">Currently no service history</Text>
+												<Text className="font-semibold text-lg">Currently no service history for {currDate.getMonth() + 1} / {currDate.getDate()}</Text>
 											</View>
 										</View>
 									</View>
