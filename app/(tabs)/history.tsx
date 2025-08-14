@@ -70,7 +70,10 @@ export default function History() {
         <SafeAreaView className="flex-1 bg-white">
 			<View className="flex-1 mx-auto p-2">
 				<View className="flex items-center mb-4">
-					<CalendarMonth initialYear={currDate.getFullYear()} initialMonthIdx={currDate.getMonth()} setCurrDate={setCurrDate}/>
+					<CalendarMonth initialYear={currDate.getFullYear()} initialMonthIdx={currDate.getMonth()} currDate={currDate} setCurrDate={setCurrDate}/>
+				</View>
+				<View className="border-t p-2">
+					<Text className="font-bold text-lg self-start mb-2">History on {currDate.getMonth() + 1} / {currDate.getDate()}</Text>
 				</View>
 				<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
 					<View
@@ -132,7 +135,7 @@ export default function History() {
 										</View>
 										<View className="flex flex-row items-center justify-between w-[70vw] min-h-[8vh] overflow-hidden p-2">
 											<View className="flex flex-col items-start">
-												<Text className="font-semibold text-lg">Currently no service history for {currDate.getMonth() + 1} / {currDate.getDate()}</Text>
+												<Text className="font-semibold text-lg">Currently no service history</Text>
 											</View>
 										</View>
 									</View>

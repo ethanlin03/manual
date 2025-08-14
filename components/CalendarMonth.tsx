@@ -9,7 +9,7 @@ const monthNames = ["January", "February", "March", "April", "May", "June", "Jul
 // need to have current date selected highlighted
 
 // monthIdx is 0-indexed
-const CalendarMonth = ({ initialYear, initialMonthIdx, setCurrDate }: { initialYear: number, initialMonthIdx: number, setCurrDate: Dispatch<SetStateAction<Date>> }) => {
+const CalendarMonth = ({ initialYear, initialMonthIdx, currDate, setCurrDate }: { initialYear: number, initialMonthIdx: number, currDate: Date, setCurrDate: Dispatch<SetStateAction<Date>> }) => {
     const currDay = new Date().getDate();
     const currMonth = new Date().getMonth(); // 0-indexed
     const [year, setYear] = useState(() => initialYear);
@@ -53,8 +53,13 @@ const CalendarMonth = ({ initialYear, initialMonthIdx, setCurrDate }: { initialY
             setMonthIdx((prev) => prev + 1);
     };
 
+    useEffect(() => {
+        console.log("The current date is: ", currDate);
+        console.log(currDate.getDate())
+    }, [currDate]);
+
     return (
-        <View className="p-4">
+        <View className="p-2">
             <View className="border border-gray-400 p-4 rounded-lg">
                 <View className="flex flex-row items-center justify-between mb-4">
                     <Pressable onPress={handlePrevMonth}>
@@ -83,40 +88,25 @@ const CalendarMonth = ({ initialYear, initialMonthIdx, setCurrDate }: { initialY
                         {calendarDays
                             .slice(rowIndex * 7, (rowIndex + 1) * 7)
                             .map((item, colIndex) => (
-                                (monthIdx === currMonth && item.day === currDay) ? (
-                                    <Pressable
-                                        key={`day-${rowIndex}-${colIndex}`}
-                                        className="flex-1"
-                                        onPress={() => {
-                                        if (!item.emptyDay)
-                                            setCurrDate(new Date(year, monthIdx, item.day));
-                                        }}
-                                    >
-                                        <View className="h-12 justify-end items-end border border-blue-500 p-1">
-                                            {!item.emptyDay && (
-                                                <View className="bg-blue-400 rounded-full aspect-square justify-center items-center">
-                                                    <Text className="text-sm font-semibold">{item.day}</Text>
-                                                </View>
-                                            )}
-                                        </View>
-                                    </Pressable>
-                                    ) : (
-                                    <Pressable
-                                        key={`day-${rowIndex}-${colIndex}`}
-                                        className="flex-1"
-                                        onPress={() => {
-                                        if (!item.emptyDay) {
-                                            setCurrDate(new Date(year, monthIdx, item.day));
-                                        }
-                                        }}
-                                    >
-                                        <View className="h-12 justify-end items-end border border-gray-300 p-1">
-                                            {!item.emptyDay && (
-                                                <Text className="text-sm font-semibold">{item.day}</Text>
-                                            )}
-                                        </View>
-                                    </Pressable>
-                                )
+                                <Pressable
+                                    key={`day-${rowIndex}-${colIndex}`}
+                                    className="flex-1"
+                                    onPress={() => {
+                                    if (!item.emptyDay)
+                                        setCurrDate(new Date(year, monthIdx, item.day));
+                                    }}
+                                >
+                                    <View className={`h-12 justify-end items-end border ${item.day === currDate.getDate() && monthIdx === currDate.getMonth() ? "border-blue-500" : "border-gray-300"} p-1`}>
+                                        {!item.emptyDay && (
+                                            <View className={`rounded-full aspect-square items-center justify-center ${item.day === currDate.getDate() && monthIdx === currDate.getMonth() ? "bg-gray-300" : ""}`}>
+                                                <Text className={`text-sm font-bold ${monthIdx === currMonth && item.day === currDay && "text-blue-500"}`}>
+                                                    {item.day}
+                                                </Text>
+                                            </View>
+                                        )}
+                                    </View>
+                                </Pressable>
+                                
                             ))}
                         </View>
                     ))}
