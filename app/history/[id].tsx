@@ -13,6 +13,7 @@ import ServiceSection from '@/components/ServiceSection';
 import { UserContext } from '../UserContext';
 import ServiceDropDownMenu from '@/components/ServiceDropDown';
 import SortDropDownMenu from '@/components/SortDropDownMenu';
+import CarSettings from '@/components/CarSettings';
 
 const data: Number[] = [];
 const sortArr = [
@@ -35,6 +36,7 @@ export default function HistoryPage() {
 	const [addModal, setAddModal] = useState(false);
 	const [filterModal, setFilterModal] = useState(false);
 	const [removeIcon, setRemoveIcon] = useState(false);
+	const [settings, setSettings] = useState(false);
 	const [searchedService, setSearchedService] = useState("");
 	const [filter, setFilter] = useState("");
 	const [sortAsc, setSortAsc] = useState(false);
@@ -98,6 +100,14 @@ export default function HistoryPage() {
 	const removeService = () => {
 		setRemoveIcon(!removeIcon);
 	};
+
+	const openSettings = () => {
+		setSettings(true);
+	}
+
+	const closeSettings = () => {
+		setSettings(false);
+	}
 
 	const handleCloseFilter = () => {
 		setFilterModal(false)
@@ -218,6 +228,7 @@ export default function HistoryPage() {
 					</KeyboardAvoidingView>
 				</Pressable>
 			)}
+			{settings && ( <CarSettings car={car} setSettings={setSettings}/> )}
 			<View className="flex bg-blue-300">
 				<SafeAreaView>
 					<TouchableOpacity onPress={handleBack} className="p-4">
@@ -225,7 +236,7 @@ export default function HistoryPage() {
 					</TouchableOpacity>
 					<CarDropDownMenu car={car} setCar={setCar}/>
 
-					<View className="flex flex-row items-center justify-center self-center mb-10 w-[90vw] gap-10">
+					<View className="flex flex-row items-center justify-between self-center mb-10 w-[90vw]">
 						<TouchableOpacity onPress={() => setAddModal(true)} className="flex flex-row items-center gap-2 p-2 px-4 bg-white rounded-lg border-blue-200 border-2">
 							<Text className="font-semibold">Add a service</Text>
 							<Ionicons name='add-circle' color="blue"/>
@@ -233,6 +244,9 @@ export default function HistoryPage() {
 						<TouchableOpacity onPress={removeService} className="flex flex-row items-center gap-2 p-2 px-4 bg-white rounded-lg border-red-200 border-2">
 							<Text className="font-semibold">Remove a service</Text>
 							<Ionicons name='remove-circle' color="red"/>
+						</TouchableOpacity>
+						<TouchableOpacity onPress={openSettings} className='mr-2'>
+							<Ionicons name='settings-sharp' color="gray" size={16}/>
 						</TouchableOpacity>
 					</View>
 				</SafeAreaView>
