@@ -52,6 +52,22 @@ const CarSettings = ({car, setSettings}: {car: Car | undefined, setSettings: Dis
                             <Text className="mb-1">Oil Change</Text>
                             <Text className="text-sm ">10000 miles | 12 months</Text>
                         </TouchableOpacity>
+                        <TouchableOpacity className="bg-gray-100 rounded-lg w-full p-2" onPress={() => openMaintenanceModal("Brake Inspection")}>
+                            <Text className="mb-1">Brake Inspection</Text>
+                            <Text className="text-sm ">10000 miles | 12 months</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity className="bg-gray-100 rounded-lg w-full p-2" onPress={() => openMaintenanceModal("Tire Rotation")}>
+                            <Text className="mb-1">Tire Rotation</Text>
+                            <Text className="text-sm ">10000 miles | 12 months</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity className="bg-gray-100 rounded-lg w-full p-2" onPress={() => openMaintenanceModal("Transmission Service")}>
+                            <Text className="mb-1">Transmission Service</Text>
+                            <Text className="text-sm ">60000 miles | 12 months</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity className="bg-gray-100 rounded-lg w-full p-2" onPress={() => openMaintenanceModal("Emission")}>
+                            <Text className="mb-1">Emissions</Text>
+                            <Text className="text-sm ">12 months</Text>
+                        </TouchableOpacity>
                     </View>
                     <Pressable onPress={handleSubmit} className="self-end w-auto bg-blue-200 p-2 rounded-lg">
                         <Text className="text-sm font-semibold">Submit</Text>
