@@ -18,6 +18,19 @@ interface Service {
     mileage: string;
 }
 
+const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+function getDaySuffix(day: number) {
+	if(day === 1)
+		return "st";
+	else if(day === 2)
+		return "nd";
+	else if(day === 3)
+		return "rd";
+	else
+		return "th";
+}
+
 export default function History() {
 	const [height, setHeight] = useState(0);
 	const [currDate, setCurrDate] = useState(new Date());
@@ -73,7 +86,7 @@ export default function History() {
 					<CalendarMonth initialYear={currDate.getFullYear()} initialMonthIdx={currDate.getMonth()} currDate={currDate} setCurrDate={setCurrDate}/>
 				</View>
 				<View className="border-t p-2">
-					<Text className="font-bold text-lg self-start mb-2">History on {currDate.getMonth() + 1} / {currDate.getDate()}</Text>
+					<Text className="font-bold text-lg self-start mb-2">Services on {monthNames[currDate.getMonth() + 1]} {currDate.getDate()}{getDaySuffix(currDate.getDate())}</Text>
 				</View>
 				<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
 					<View
