@@ -1,10 +1,9 @@
 import { ScrollView, SafeAreaView, KeyboardAvoidingView, View, Text, TextInput, TouchableOpacity, Platform, Pressable } from "react-native";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState, useRef } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { Car } from "@/app/CarContext";
 import { LabeledField } from "./LabeledField";
 import { MaintenanceModal } from "./MaintenanceModal";
-import { Label } from "@react-navigation/elements";
 
 const CarSettings = ({car, setSettings}: {car: Car | undefined, setSettings: Dispatch<SetStateAction<boolean>>}) => {
     const [carName, setCarName] = useState("");
@@ -14,6 +13,7 @@ const CarSettings = ({car, setSettings}: {car: Car | undefined, setSettings: Dis
     const [maintenance, setMaintenance] = useState("");
     const [notes, setNotes] = useState("");
     const [maintenanceModal, setMaintenanceModal] = useState(false);
+    const notesRef = useRef<TextInput>(null);
 
     const handleSubmit = () => {
         console.log("Submitted");
@@ -71,15 +71,7 @@ const CarSettings = ({car, setSettings}: {car: Car | undefined, setSettings: Dis
                                 <Text className="text-sm ">60000 miles | 24 months</Text>
                             </TouchableOpacity>
                         </View>
-                            <Text className="font-semibold">Notes</Text>
-                            <TextInput
-                                placeholder="Enter notes..."
-                                placeholderTextColor="#888"
-                                onChangeText={setNotes}
-                                value={notes}
-                                className="bg-gray-100 rounded-lg w-full p-2 mt-2 mb-8"
-                            />
-                            {/* Need to fix for multline text input */}
+                        {/* Issue with notes section due to mulitline */}
                         <Pressable onPress={handleSubmit} className="self-end w-auto bg-blue-200 p-2 rounded-lg">
                             <Text className="text-sm font-semibold">Submit</Text>
                         </Pressable>

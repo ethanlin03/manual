@@ -17,6 +17,7 @@ const AddCar = () => {
     const [carMake, setCarMake] = useState("");
     const [carModel, setCarModel] = useState("");
     const [mileage, setMileage] = useState("");
+    const [annualMileage, setAnnualMileage] = useState("");
     const [userId, setUserId] = useContext(UserContext);
 
     const handleBack = () => {
@@ -24,7 +25,7 @@ const AddCar = () => {
 	};
     const handleNextPage = async () => {
         // will need to handle images later AND find a better way to store users' cars (potentially have docs with arrays)
-        if(image && carName && carYear && carMake && carModel && mileage) {
+        if(image && carName && carYear && carMake && carModel && mileage && annualMileage) {
             try {
                 const userCarRef = doc(db, "cars", userId);
                 const newCar = {
@@ -33,6 +34,7 @@ const AddCar = () => {
                     make: carMake,
                     model: carModel,
                     mileage: mileage,
+                    annualMileage: annualMileage,
                     image: image,
                     alerts: 0
                 };
@@ -184,9 +186,19 @@ const AddCar = () => {
                             onChangeText={setMileage}
                             className="rounded-lg bg-gray-200 mb-6 p-2 px-4"
                         />
-                        <TouchableOpacity onPress={handleNextPage} className="flex flex-row items-end justify-end">
-                            <Ionicons name="arrow-forward" size={16}/>
-                        </TouchableOpacity>
+                        <Text className="text-sm italic mb-1">Amount Driven in a Year:</Text>
+                        <TextInput
+                            placeholder="Enter annual mileage..."
+                            placeholderTextColor="#888"
+                            value={annualMileage}
+                            onChangeText={setAnnualMileage}
+                            className="rounded-lg bg-gray-200 mb-6 p-2 px-4"
+                        />
+                        <View className="flex items-end">
+                            <TouchableOpacity onPress={handleNextPage} className="p-2 rounded-full">
+                                <Ionicons name="arrow-forward" size={16}/>
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 </ScrollView>
             </KeyboardAvoidingView>
