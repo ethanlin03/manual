@@ -3,13 +3,11 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useState, useEffect, useContext } from 'react';
 import CarCard from '@/components/CarCard';
-import { UserContext } from '../UserContext';
 import { CarContext } from '../CarContext';
 
 export default function Home() {
 	const router = useRouter();
 	const [carArr, setCarArr] = useContext(CarContext)
-	const [userId, setUserId] = useContext(UserContext);
 
 	const handleAddCar = () => {
 		router.push('/car/addcar');
@@ -18,6 +16,7 @@ export default function Home() {
 	useEffect(() => {
 		//need to refresh cararr
 	}, []);
+	
   	return (
 		<SafeAreaView className="flex-1 bg-white">
 			<ScrollView className="flex-1 mx-auto p-2">

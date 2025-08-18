@@ -1,6 +1,7 @@
-import { View, Text, TouchableOpacity, Image } from 'react-native';
+import { ActivityIndicator,View, Text, TouchableOpacity, Image } from 'react-native';
 import { useRouter } from 'expo-router';
 import CarImg from '@/assets/images/car.png';
+import { useState } from 'react';
 
 type CarCardProps = {
     name: string;
@@ -13,6 +14,7 @@ type CarCardProps = {
 
 const CarCard: React.FC<CarCardProps> = ({name, desc, mileage, image, index, alerts}) => {
     const router = useRouter();
+    const [loading, setLoading] = useState(false);
 
     const handleCarSelect = () => {
         console.log(image)
@@ -23,7 +25,14 @@ const CarCard: React.FC<CarCardProps> = ({name, desc, mileage, image, index, ale
     };
     return (
         <TouchableOpacity onPress={handleCarSelect} className="flex flex-row items-center shadow-gray-300 shadow-sm max-w-[95vw] bg-white border-b-1 border-gray-400 p-2 mb-2">
-            <Image source={CarImg} className="max-w-[30vw] h-auto aspect-[4/3] mr-2"/>
+            <View className="w-[30vw] aspect-[4/3] mr-2 items-center justify-center">
+                <Image source={CarImg} className="w-full h-full" onLoadStart={() => setLoading(true)} onLoadEnd={() => setLoading(false)} resizeMode="cover"/>
+                {loading && <ActivityIndicator
+                    size="small"
+                    color="#60a5fa"
+                    style={{ position: 'absolute', alignSelf: 'center' }}
+                />}
+            </View>
             {/* Need to replace later with actual correct image */}
             <View className="flex flex-col items-start justify-start space-y-2 mb-auto">
                 <Text className="text-lg font-semibold mb-1">{name}</Text>
