@@ -8,6 +8,13 @@ import { db } from "@/FirebaseConfig";
 import { getAuth } from '@firebase/auth';
 import { UserContext } from '../UserContext';
 
+const baseSchedule = [
+    { type: 'Oil Change', miles: 5000, months: 6 },
+    { type: 'Tire Rotation', miles: 7500, months: 6 },
+    { type: 'Brake Inspection', miles: 10000, months: 12 },
+    { type: 'Transmission Service', miles: 30000, months: 24 },
+];
+
 const AddCar = () => {
     const router = useRouter();
     const [image, setImage] = useState<string | null>(null);
@@ -23,11 +30,27 @@ const AddCar = () => {
     const handleBack = () => {
 		router.push('/(tabs)')
 	};
+    const adjustSchedule = (annualMileage: number, baseSchedule: { type: string; miles: number; months: number }[]) => {
+        const milesPerMonth = annualMileage / 12;
+
+        return baseSchedule.map(item => {
+            const monthsByMileage = item.miles / milesPerMonth;
+            const adjustedMonths = Math.min(monthsByMileage, item.months);
+
+            return {
+                ...item,
+                adjustedMonths: Math.round(adjustedMonths * 10) / 10
+            };
+        });
+    };
     const handleNextPage = async () => {
         // will need to handle images later AND find a better way to store users' cars (potentially have docs with arrays)
         if(image && carName && carYear && carMake && carModel && mileage && annualMileage) {
             try {
                 const userCarRef = doc(db, "cars", userId);
+                const annualMileageNum = Number(annualMileage);
+                const adjustedSchedule = adjustSchedule(annualMileageNum, baseSchedule);
+
                 const newCar = {
                     name: carName,
                     year: carYear,
@@ -36,7 +59,8 @@ const AddCar = () => {
                     mileage: mileage,
                     annualMileage: annualMileage,
                     image: image,
-                    alerts: 0
+                    alerts: 0,
+                    maintenance_schedule: adjustedSchedule
                 };
                 await setDoc(userCarRef, {
                     cars: arrayUnion(newCar)
