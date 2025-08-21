@@ -13,7 +13,9 @@ type Maintenance_Item = {
 export type Car = {
 	id: number;
 	name: string;
-	desc: string;
+	year: string;
+	make: string;
+	model: string;
 	mileage: string;
 	annualMileage: string;
 	image: any; 
@@ -37,7 +39,9 @@ export default function CarProvider({ children }: { children: React.ReactNode })
 					const arr = userCarsArr.map((car: any, i: number) => ({
 						index: i,
 						name: car.name,
-						desc: car.year + " " + car.make + " " + car.model,
+						year: car.year,
+						make: car.make,
+						model: car.model,
 						mileage: car.mileage,
 						annualMileage: car.annualMileage,
 						image: car.image,

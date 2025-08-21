@@ -60,7 +60,7 @@ const AddCar = () => {
                     annualMileage: annualMileage,
                     image: image,
                     alerts: 0,
-                    maintenance_schedule: adjustedSchedule
+                    maintenanceSchedule: adjustedSchedule
                 };
                 await setDoc(userCarRef, {
                     cars: arrayUnion(newCar)

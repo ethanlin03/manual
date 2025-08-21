@@ -22,12 +22,12 @@ export default function Home() {
 			<ScrollView className="flex-1 mx-auto p-2">
 				<Text className="font-bold text-2xl">Home Page</Text>
 				<View className="flex-col pb-16">
-					{carArr.map((car) => (
+					{carArr.map((car, i) => (
 						<CarCard 
-							key={car.index}
-							index={car.index}
+							key={i}
+							index={i}
 							name={car.name}
-							desc={car.desc}
+							desc={`${car.year} ${car.make} ${car.model}`}
 							mileage={car.mileage}
 							image={car.image}
 							alerts={car.alerts}

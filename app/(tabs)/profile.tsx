@@ -141,12 +141,12 @@ export default function Profile() {
 							directionalLockEnabled={true}
 							className="flex-row h-auto py-2 px-1"
 						>
-							{carArr.map((car) => (
+							{carArr.map((car, i) => (
 								<CarCard
-									key={car.index}
-									index={car.index}
+									key={i}
+									index={i}
 									name={car.name}
-									desc={car.desc}
+									desc={`${car.year} ${car.make} ${car.model}`}
 									mileage={car.mileage}
 									image={car.image}
 									alerts={car.alerts}
@@ -161,12 +161,12 @@ export default function Profile() {
 							directionalLockEnabled={true}
 							className="flex-row h-auto py-2 px-1"
 						>
-							{carArr.map((car) => (
+							{carArr.map((car, i) => (
 								<CarCard
-									key={car.index}
-									index={car.index}
+									key={i}
+									index={i}
 									name={car.name}
-									desc={car.desc}
+									desc={`${car.year} ${car.make} ${car.model}`}
 									mileage={car.mileage}
 									image={car.image}
 									alerts={car.alerts}
@@ -181,12 +181,12 @@ export default function Profile() {
 							directionalLockEnabled={true}
 							className="flex-row h-auto py-2 px-1"
 						>
-							{carArr.map((car) => (
+							{carArr.map((car, i) => (
 								<CarCard
-									key={car.index}
-									index={car.index}
+									key={i}
+									index={i}
 									name={car.name}
-									desc={car.desc}
+									desc={`${car.year} ${car.make} ${car.model}`}
 									mileage={car.mileage}
 									image={car.image}
 									alerts={car.alerts}
