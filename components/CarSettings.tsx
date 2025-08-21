@@ -31,6 +31,10 @@ const CarSettings = ({car, setSettings}: {car: Car | undefined, setSettings: Dis
         console.log(carName)
     }, [carName])
 
+    useEffect(() => {
+        console.log("The car's maintenance: ", car?.maintenanceSchedule);
+    }, [])
+
     return (
         <SafeAreaView className="absolute inset-0 justify-center items-center bg-white z-10">
             {maintenanceModal && <MaintenanceModal maintenance={maintenance} setMaintenanceModal={setMaintenanceModal}/>}
@@ -54,22 +58,12 @@ const CarSettings = ({car, setSettings}: {car: Car | undefined, setSettings: Dis
                         </View>
                         <Text className="font-semibold">Maintenance Settings</Text>
                         <View className="flex flex-col justify-between items-center mb-10 mt-2 p-2 gap-2 border border-gray-300 rounded-lg">
-                            <TouchableOpacity className="bg-gray-100 rounded-lg w-full p-2" onPress={() => openMaintenanceModal("Oil Change")}>
-                                <Text className="mb-1">Oil Change</Text>
-                                <Text className="text-sm ">5000 miles | 5 months</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity className="bg-gray-100 rounded-lg w-full p-2" onPress={() => openMaintenanceModal("Brake Inspection")}>
-                                <Text className="mb-1">Brake Inspection</Text>
-                                <Text className="text-sm ">12000 miles | 12 months</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity className="bg-gray-100 rounded-lg w-full p-2" onPress={() => openMaintenanceModal("Tire Rotation")}>
-                                <Text className="mb-1">Tire Rotation</Text>
-                                <Text className="text-sm ">7500 miles | 6 months</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity className="bg-gray-100 rounded-lg w-full p-2" onPress={() => openMaintenanceModal("Transmission Service")}>
-                                <Text className="mb-1">Transmission Service</Text>
-                                <Text className="text-sm ">60000 miles | 24 months</Text>
-                            </TouchableOpacity>
+                            {car?.maintenanceSchedule.map((maintenance, index) => (
+                                <TouchableOpacity key={index} className="bg-gray-100 rounded-lg w-full p-2" onPress={() => openMaintenanceModal(maintenance.type)}>
+                                    <Text className="mb-1">{maintenance.type}</Text>
+                                    <Text className="text-sm ">{maintenance.miles} miles | {maintenance.adjustedMonths} months</Text>
+                                </TouchableOpacity>
+                            ))}
                         </View>
                         {/* Issue with notes section due to mulitline */}
                         <Pressable onPress={handleSubmit} className="self-end w-auto bg-blue-200 p-2 rounded-lg">

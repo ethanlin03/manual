@@ -3,6 +3,13 @@ import { UserContext } from "./UserContext";
 import { doc, getDoc, onSnapshot } from "firebase/firestore";
 import { db } from "@/FirebaseConfig";
 
+type Maintenance_Item = { 
+	type: string;
+	miles: number;
+	months: number;
+	adjustedMonths: number;
+};
+
 export type Car = {
 	index: number;
 	name: string;
@@ -11,6 +18,7 @@ export type Car = {
 	annualMileage: string;
 	image: any; 
 	alerts: number;
+	maintenanceSchedule: Maintenance_Item[];
 };
 
 export const CarContext = createContext<[Car[], React.Dispatch<React.SetStateAction<Car[]>>]>([[], () => {}]);
@@ -33,7 +41,8 @@ export default function CarProvider({ children }: { children: React.ReactNode })
 						mileage: car.mileage,
 						annualMileage: car.annualMileage,
 						image: car.image,
-						alerts: car.alerts
+						alerts: car.alerts,
+						maintenanceSchedule: car.maintenance_schedule
 					}));
 					setCars(arr);
 				}
