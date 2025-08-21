@@ -1,7 +1,8 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { View, Text, TextInput, Pressable } from "react-native";
-import { LabeledField } from "./LabeledField";
+import { View, Text, TextInput, Pressable, TouchableOpacity } from "react-native";
+import LabeledField from "./LabeledField";
 import { Ionicons } from "@expo/vector-icons";
+import AlertModal from "./AlertModal";
 
 type MaintenanceModalProps = {
     maintenance: string,
@@ -12,8 +13,9 @@ type MaintenanceModalProps = {
     setMiles: Dispatch<SetStateAction<number>>
 };
 
-export const MaintenanceModal = ({maintenance, setMaintenanceModal, months, setMonths, miles, setMiles} : MaintenanceModalProps) => {
-    // might move alert modal to car settings
+const MaintenanceModal = ({maintenance, setMaintenanceModal, months, setMonths, miles, setMiles} : MaintenanceModalProps) => {
+    // might keep alert modal in modal
+    // need to update maintenanace
     const [tempMiles, setTempMiles] = useState(0);
     const [tempMonths, setTempMonths] = useState(0);
     const [alertModal, setAlertModal] = useState(false);
@@ -25,15 +27,11 @@ export const MaintenanceModal = ({maintenance, setMaintenanceModal, months, setM
     };
 
     const handleCancel = () => {
-        console.log("cancel")
+        console.log("leave")
         setAlertModal(false);
     }
 
     const handleClose = () => {
-        if(tempMiles !== 0 || tempMonths !== 0) {
-            setAlertModal(true);
-            return;
-        }
         setMaintenanceModal(false);
     };
 
@@ -42,35 +40,12 @@ export const MaintenanceModal = ({maintenance, setMaintenanceModal, months, setM
     }, [])
 
     return (
-        <Pressable onPress={handleClose} className="absolute justify-center items-center inset-0 bg-black/50 z-10">
-            {alertModal && 
-                <Pressable onPress={() => {}} className="absolute justify-center items-center inset-0 bg-black/80 z-10">
-                    <View className="flex flex-col justify-center w-[70%] bg-white rounded-lg h-auto p-4 gap-2">
-                        <Text className="text-gray-700 font-semibold text-2xl self-center">
-                            Confirm
-                        </Text>
-                        <Text className="text-sm">
-                            Are you sure you want to leave? You have unsaved changes.
-                        </Text>
-                        <View className="flex flex-row self-end gap-2 mt-2">
-                            <Pressable onPress={handleSubmit} className="w-auto bg-blue-200 p-2 rounded-lg">
-                                <Text className="text-sm font-semibold">Confirm</Text>
-                            </Pressable>
-                            <Pressable onPress={handleCancel} className="w-auto bg-white border p-2 rounded-lg">
-                                <Text className="text-sm font-semibold">Cancel</Text>
-                            </Pressable>
-                        </View>
-                    </View>
-                </Pressable>
-            }
+        <Pressable onPress={handleClose} className="absolute justify-center items-center inset-0 bg-black/80 z-10">
             <Pressable onPress={() => {}} className="w-[60%] bg-white rounded-lg h-auto p-4 gap-2">
                 <View className="relative items-center mb-2">
-                    <Ionicons 
-                        name="close-circle-outline" 
-                        size={16} 
-                        onPress={handleClose} 
-                        className="absolute left-0" 
-                    />
+                    <TouchableOpacity onPress={handleClose} className="absolute left-0">
+                        <Ionicons name="close-circle-outline" size={16} />
+                    </TouchableOpacity>
                     <Text className="text-gray-700 font-semibold text-lg">
                         {maintenance}
                     </Text>
@@ -102,3 +77,5 @@ export const MaintenanceModal = ({maintenance, setMaintenanceModal, months, setM
         </Pressable>
     );
 };
+
+export default MaintenanceModal;

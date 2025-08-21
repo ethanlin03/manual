@@ -2,8 +2,9 @@ import { ScrollView, SafeAreaView, KeyboardAvoidingView, View, Text, TextInput, 
 import { Dispatch, SetStateAction, useEffect, useState, useRef, useContext } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { Car, CarContext } from "@/app/CarContext";
-import { LabeledField } from "./LabeledField";
-import { MaintenanceModal } from "./MaintenanceModal";
+import LabeledField from "./LabeledField";
+import MaintenanceModal from "./MaintenanceModal";
+import AlertModal from "./AlertModal";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/FirebaseConfig";
 import { UserContext } from "@/app/UserContext";
@@ -16,6 +17,7 @@ const CarSettings = ({car, setSettings}: {car: Car | undefined, setSettings: Dis
     const [maintenance, setMaintenance] = useState("");
     const [notes, setNotes] = useState("");
     const [maintenanceModal, setMaintenanceModal] = useState(false);
+    const [alertModal, setAlertModal] = useState(false);
     const [miles, setMiles] = useState(0);
     const [months, setMonths] = useState(0);
     const [userId, setUserId] = useContext(UserContext);
@@ -23,6 +25,8 @@ const CarSettings = ({car, setSettings}: {car: Car | undefined, setSettings: Dis
 
     const handleSubmit = async () => {
         // description needs to be replaced completely with year, make, model and move zipcode to user profile
+        // currently doesn't update maintenance schedule and needs to update it from maintenance modal
+        // need to have placeholders for license plate and zipcode right
         try {
             const userCarRef = doc(db, "cars", userId);
             const updatedCars = userCars.map((c) => {
@@ -51,6 +55,14 @@ const CarSettings = ({car, setSettings}: {car: Car | undefined, setSettings: Dis
         }
     }
 
+    const handleClose = () => {
+        if(miles !== 0 || months !== 0 || carName.length !== 0 || mileage.length !== 0 || zipCode.length !== 0 || licensePlate.length !== 0) {
+            setAlertModal(true);
+            return;
+        }
+        setSettings(false);
+    };
+
     const openMaintenanceModal = (desc: string, adjustedMonths: number, miles: number) => {
         setMaintenance(desc);
         setMonths(adjustedMonths);
@@ -70,7 +82,8 @@ const CarSettings = ({car, setSettings}: {car: Car | undefined, setSettings: Dis
 
     return (
         <SafeAreaView className="absolute inset-0 justify-center items-center bg-white z-10">
-            {maintenanceModal && <MaintenanceModal maintenance={maintenance} setMaintenanceModal={setMaintenanceModal} months={months} setMonths={setMonths} miles={miles} setMiles={setMiles}/>}
+            { alertModal && <AlertModal handleGoBack={() => setAlertModal(false)} handleLeave={() => setSettings(false)} /> }
+            { maintenanceModal && <MaintenanceModal maintenance={maintenance} setMaintenanceModal={setMaintenanceModal} months={months} setMonths={setMonths} miles={miles} setMiles={setMiles} /> }
             <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} className="w-full h-full px-4">
                 <ScrollView
                     contentContainerStyle={{ flexGrow: 1, padding: 16 }}
@@ -79,7 +92,7 @@ const CarSettings = ({car, setSettings}: {car: Car | undefined, setSettings: Dis
                 >
                     <View className="flex flex-col w-full rounded-lg">
                         <Text className="self-center text-2xl font-semibold">{car?.year} {car?.make} {car?.model} Settings</Text>
-                        <TouchableOpacity onPress={() => setSettings(false)} className="p-2 absolute top-0 right-0">
+                        <TouchableOpacity onPress={handleClose} className="p-2 absolute top-0 right-0">
                             <Ionicons name="close" size={20} color="black" />
                         </TouchableOpacity>
 
