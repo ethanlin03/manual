@@ -11,7 +11,7 @@ type Maintenance_Item = {
 };
 
 export type Car = {
-	index: number;
+	id: number;
 	name: string;
 	desc: string;
 	mileage: string;
@@ -42,7 +42,7 @@ export default function CarProvider({ children }: { children: React.ReactNode })
 						annualMileage: car.annualMileage,
 						image: car.image,
 						alerts: car.alerts,
-						maintenanceSchedule: car.maintenance_schedule
+						maintenanceSchedule: car.maintenanceSchedule,
 					}));
 					setCars(arr);
 				}

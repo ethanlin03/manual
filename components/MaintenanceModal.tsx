@@ -13,11 +13,14 @@ type MaintenanceModalProps = {
 };
 
 export const MaintenanceModal = ({maintenance, setMaintenanceModal, months, setMonths, miles, setMiles} : MaintenanceModalProps) => {
+    // might move alert modal to car settings
     const [tempMiles, setTempMiles] = useState(0);
     const [tempMonths, setTempMonths] = useState(0);
     const [alertModal, setAlertModal] = useState(false);
 
     const handleSubmit = () => {
+        setMiles(tempMiles);
+        setMonths(tempMonths);
         setMaintenanceModal(false);
     };
 
@@ -36,7 +39,7 @@ export const MaintenanceModal = ({maintenance, setMaintenanceModal, months, setM
 
     useEffect(() => {
         console.log(tempMonths);
-    }, [tempMonths])
+    }, [])
 
     return (
         <Pressable onPress={handleClose} className="absolute justify-center items-center inset-0 bg-black/50 z-10">
