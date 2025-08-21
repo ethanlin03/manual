@@ -3,7 +3,7 @@ import { UserContext } from "./UserContext";
 import { doc, getDoc, onSnapshot } from "firebase/firestore";
 import { db } from "@/FirebaseConfig";
 
-type Maintenance_Item = { 
+export type Maintenance_Item = { 
 	type: string;
 	miles: number;
 	months: number;

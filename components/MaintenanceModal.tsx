@@ -10,19 +10,21 @@ type MaintenanceModalProps = {
     miles: number,
     setMaintenanceModal: Dispatch<SetStateAction<boolean>>,
     setMonths: Dispatch<SetStateAction<number>>,
-    setMiles: Dispatch<SetStateAction<number>>
+    setMiles: Dispatch<SetStateAction<number>>,
+    updateMaintenance: (type: string, newMiles: number, newMonths: number) => void;
 };
 
-const MaintenanceModal = ({maintenance, setMaintenanceModal, months, setMonths, miles, setMiles} : MaintenanceModalProps) => {
+const MaintenanceModal = ({maintenance, setMaintenanceModal, months, setMonths, miles, setMiles, updateMaintenance} : MaintenanceModalProps) => {
     // might keep alert modal in modal
     // need to update maintenanace
-    const [tempMiles, setTempMiles] = useState(0);
-    const [tempMonths, setTempMonths] = useState(0);
+    const [tempMiles, setTempMiles] = useState(miles);
+    const [tempMonths, setTempMonths] = useState(months);
     const [alertModal, setAlertModal] = useState(false);
 
     const handleSubmit = () => {
-        setMiles(tempMiles);
-        setMonths(tempMonths);
+        updateMaintenance(maintenance, tempMiles, tempMonths);
+        setMiles(0);
+        setMonths(0);
         setMaintenanceModal(false);
     };
 
@@ -32,6 +34,10 @@ const MaintenanceModal = ({maintenance, setMaintenanceModal, months, setMonths, 
     }
 
     const handleClose = () => {
+        if(tempMiles !== miles || tempMonths !== months) {
+            setAlertModal(true);
+            return;
+        }
         setMaintenanceModal(false);
     };
 
@@ -41,6 +47,7 @@ const MaintenanceModal = ({maintenance, setMaintenanceModal, months, setMonths, 
 
     return (
         <Pressable onPress={handleClose} className="absolute justify-center items-center inset-0 bg-black/80 z-10">
+            { alertModal && <AlertModal handleGoBack={() => setAlertModal(false)} handleLeave={() => setMaintenanceModal(false)} /> }
             <Pressable onPress={() => {}} className="w-[60%] bg-white rounded-lg h-auto p-4 gap-2">
                 <View className="relative items-center mb-2">
                     <TouchableOpacity onPress={handleClose} className="absolute left-0">
