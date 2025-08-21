@@ -13,6 +13,8 @@ const CarSettings = ({car, setSettings}: {car: Car | undefined, setSettings: Dis
     const [maintenance, setMaintenance] = useState("");
     const [notes, setNotes] = useState("");
     const [maintenanceModal, setMaintenanceModal] = useState(false);
+    const [miles, setMiles] = useState(0);
+    const [months, setMonths] = useState(0);
     const notesRef = useRef<TextInput>(null);
 
     const handleSubmit = () => {
@@ -20,16 +22,18 @@ const CarSettings = ({car, setSettings}: {car: Car | undefined, setSettings: Dis
         setSettings(false);
     }
 
-    const openMaintenanceModal = (desc: string) => {
+    const openMaintenanceModal = (desc: string, adjustedMonths: number, miles: number) => {
         setMaintenance(desc);
+        setMonths(adjustedMonths);
+        setMiles(miles);
         setMaintenanceModal(true);
     }
 
     // maybe include maintenance array or map with maintenance and month/miles
 
     useEffect(() => {
-        console.log(carName)
-    }, [carName])
+        console.log(miles)
+    }, [miles])
 
     useEffect(() => {
         console.log("The car's maintenance: ", car?.maintenanceSchedule);
@@ -37,7 +41,7 @@ const CarSettings = ({car, setSettings}: {car: Car | undefined, setSettings: Dis
 
     return (
         <SafeAreaView className="absolute inset-0 justify-center items-center bg-white z-10">
-            {maintenanceModal && <MaintenanceModal maintenance={maintenance} setMaintenanceModal={setMaintenanceModal}/>}
+            {maintenanceModal && <MaintenanceModal maintenance={maintenance} setMaintenanceModal={setMaintenanceModal} months={months} setMonths={setMonths} miles={miles} setMiles={setMiles}/>}
             <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} className="w-full h-full px-4">
                 <ScrollView
                     contentContainerStyle={{ flexGrow: 1, padding: 16 }}
@@ -59,7 +63,7 @@ const CarSettings = ({car, setSettings}: {car: Car | undefined, setSettings: Dis
                         <Text className="font-semibold">Maintenance Settings</Text>
                         <View className="flex flex-col justify-between items-center mb-10 mt-2 p-2 gap-2 border border-gray-300 rounded-lg">
                             {car?.maintenanceSchedule.map((maintenance, index) => (
-                                <TouchableOpacity key={index} className="bg-gray-100 rounded-lg w-full p-2" onPress={() => openMaintenanceModal(maintenance.type)}>
+                                <TouchableOpacity key={index} className="bg-gray-100 rounded-lg w-full p-2" onPress={() => openMaintenanceModal(maintenance.type, maintenance.adjustedMonths, maintenance.miles)}>
                                     <Text className="mb-1">{maintenance.type}</Text>
                                     <Text className="text-sm ">{maintenance.miles} miles | {maintenance.adjustedMonths} months</Text>
                                 </TouchableOpacity>
