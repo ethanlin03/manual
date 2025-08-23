@@ -108,7 +108,7 @@ const CarSettings = ({car, setSettings}: {car: Car | undefined, setSettings: Dis
                     showsVerticalScrollIndicator={false}
                 >
                     <View className="flex flex-col w-full rounded-lg">
-                        <Text className="self-center text-2xl font-semibold">{car?.year} {car?.make} {car?.model} Settings</Text>
+                        <Text className="self-center text-2xl font-semibold p-2">{car?.year} {car?.make} {car?.model} Settings</Text>
                         <TouchableOpacity onPress={handleClose} className="p-2 absolute top-0 right-0">
                             <Ionicons name="close" size={20} color="black" />
                         </TouchableOpacity>

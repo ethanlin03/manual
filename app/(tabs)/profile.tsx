@@ -78,6 +78,9 @@ export default function Profile() {
 			throw error;
 		}
 	}
+	const openSettings = () => {
+		console.log("Settings opened");
+	}
 	const handleSignOut = async () => {
 		try {
 			await signOut(auth);
@@ -90,6 +93,11 @@ export default function Profile() {
 
 	return (
 		<SafeAreaView className="flex-1 max-h-screen items-center justify-start bg-white pb-20">
+			<View className='w-full h-auto'>
+				<TouchableOpacity onPress={openSettings} className='mr-2 absolute top-0 right-0 p-4 z-10'>
+					<Ionicons name='settings-sharp' color="gray" size={16}/>
+				</TouchableOpacity>
+			</View>
 			<ScrollView
 				directionalLockEnabled={true}
   				showsVerticalScrollIndicator={false}
