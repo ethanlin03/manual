@@ -273,11 +273,8 @@ export default function HistoryPage() {
 					<Ionicons name="filter" size={14} color="#888"/>
 				</TouchableOpacity>
 			</View>
-			<ScrollView className="flex-col p-4 mb-10">
-				<View className="flex-1 relative min-h-[65vh] h-auto">
-					<ServiceSection specificCar={car} removeService={removeIcon} setRemoveService={setRemoveIcon} filter={filter} sortAsc={sortAsc} sortDesc={sortDesc}/>
-				</View>
-			</ScrollView>
+
+			<ServiceSection specificCar={car} removeService={removeIcon} setRemoveService={setRemoveIcon} filter={filter} sortAsc={sortAsc} sortDesc={sortDesc}/>
 		</View>
 	);
 }
