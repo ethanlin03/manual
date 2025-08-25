@@ -183,7 +183,7 @@ export const ServiceSection = ({ specificCar, removeService, setRemoveService, f
                                 s.date === specificHistory.date &&
                                 s.mileage === specificHistory.mileage
                         );
-                        if(isRemoved) 
+                        if(isRemoved && removeService) 
                             return (
                                 <View className="flex flex-row items-center z-10 w-full" key={index}>
                                     {removeService && 
@@ -258,7 +258,7 @@ export const ServiceSection = ({ specificCar, removeService, setRemoveService, f
                 
             </View>
             {removedServices.length > 0 && 
-                <View className='flex flex-row self-center mt-auto w-full bg-white items-center justify-center p-4 gap-20'>
+                <View className='flex flex-row self-center mt-auto w-full bg-white items-center justify-center p-4 gap-20 pb-[6vh]'>
                     <TouchableOpacity onPress={cancelServiceRemoval} className='bg-gray-200 p-2 px-4 rounded-lg'>
                         <Text className='font-semibold text-lg'>Cancel</Text>
                     </TouchableOpacity>

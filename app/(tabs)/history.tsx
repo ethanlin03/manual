@@ -86,7 +86,7 @@ export default function History() {
 					<CalendarMonth initialYear={currDate.getFullYear()} initialMonthIdx={currDate.getMonth()} currDate={currDate} setCurrDate={setCurrDate}/>
 				</View>
 				<View className="border-t p-2">
-					<Text className="font-bold text-lg self-start mb-2">Services on {monthNames[currDate.getMonth() + 1]} {currDate.getDate()}{getDaySuffix(currDate.getDate())}</Text>
+					<Text className="font-bold text-lg self-start mb-2">Services on {monthNames[currDate.getMonth()]} {currDate.getDate()}{getDaySuffix(currDate.getDate())}</Text>
 				</View>
 				<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
 					<View
