@@ -25,6 +25,7 @@ const sortArr = [
 export default function HistoryPage() {
 	// need to update cardropdownmenu after car settings is updated
 	const { id, name } = useLocalSearchParams();
+	const [carId, setCarId] = useState(id);
 	const [userId, setUserId] = useContext(UserContext);
 	const [decodedName, setDecodedName] = useState(decodeURIComponent(name as string));
 	const [carArr, setCarArr] = useContext(CarContext);
@@ -70,7 +71,7 @@ export default function HistoryPage() {
 				const cars = data.cars || [];
 
 				const updatedCars = cars.map((car: any) => {
-					if (car.name === decodedName) {
+					if (car.id === id) {
 						return {
 							...car,
 							serviceHistory: [...(car.serviceHistory || []), newService]
@@ -124,26 +125,29 @@ export default function HistoryPage() {
 
 	useEffect(() => {
 		console.log("Car array updated:", carArr);
-		carArr.forEach((car) => {
-			console.log("car is: " + JSON.stringify(car))
-			if(car.name === name) {
-				setCar(car);
-				return;
-			}
-		})
-	}, []);
+		const foundCar = carArr.find(c => c.id === car?.id);
+		if (foundCar) {
+			setCar(foundCar);
+		}
+	}, [carArr]);
 
 	useEffect(() => {
 		setRemoveIcon(false);
 		if(car)
-			setDecodedName(car.name);
+			setCarId(car.id)
 
 	}, [car])
 
 	useEffect(() => {
-		console.log(filter)
-
-	}, [filter])
+		console.log("Car array updated:", carArr);
+		carArr.forEach((car) => {
+			console.log("car is: " + JSON.stringify(car))
+			if(car.id === id) {
+				setCar(car);
+				return;
+			}
+		})
+	}, [])
 
 	return (
 		<View className="flex-1 bg-white">

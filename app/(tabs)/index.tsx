@@ -14,7 +14,7 @@ export default function Home() {
 	};
 
 	useEffect(() => {
-		//need to refresh cararr
+		console.log(carArr)
 	}, []);
 	
   	return (
@@ -23,9 +23,9 @@ export default function Home() {
 				<Text className="font-bold text-2xl">Home Page</Text>
 				<View className="flex-col pb-16">
 					{carArr.map((car, i) => (
-						<CarCard 
+						<CarCard
 							key={i}
-							index={i}
+							id={car.id}
 							name={car.name}
 							desc={`${car.year} ${car.make} ${car.model}`}
 							mileage={car.mileage}

@@ -11,7 +11,7 @@ export type Maintenance_Item = {
 };
 
 export type Car = {
-	id: number;
+	id: string;
 	name: string;
 	year: string;
 	make: string;
@@ -36,8 +36,8 @@ export default function CarProvider({ children }: { children: React.ReactNode })
 				if (userCarSnap.exists()) {
 					const userCarsArr = userCarSnap.data().cars || []
 
-					const arr = userCarsArr.map((car: any, i: number) => ({
-						index: i,
+					const arr = userCarsArr.map((car: any) => ({
+						id: car.id,
 						name: car.name,
 						year: car.year,
 						make: car.make,

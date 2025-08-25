@@ -2,7 +2,7 @@ import type { Car } from "@/app/CarContext";
 import { CarContext } from "@/app/CarContext";
 import CarImg from "@/assets/images/car.png";
 import { Ionicons } from "@expo/vector-icons";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Image, StyleSheet } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 
@@ -14,25 +14,31 @@ interface Props {
 const CarDropDownMenu = ({car, setCar}: Props) => {
     const [carArr, setCarArr] = useContext(CarContext);
     const [isFocused, setIsFocused] = useState(false);
+	const currentCar = carArr.find(c => c.id === car?.id) || car;
 
 	const handleSelectedCar = (car: Car) => {
 		setCar(car)
 		console.log("Selected car is: " + car.name)
 	}
+
+	useEffect(() => {
+		console.log("The Updated arr is: ", carArr);
+	}, [carArr]);
+	
 	// Need to load correct car image
     return (
         <Dropdown
             data={carArr}
-			value={car?.name ?? null}
+			value={currentCar?.name ?? null}
             valueField="name"
             labelField="name"
             maxHeight={300}
             onChange={(car: Car) => handleSelectedCar(car)}
             search
             searchPlaceholder="Search for car name..."
-            placeholder={car ? car.name : "Select car..."}
+            placeholder={currentCar ? currentCar.name : "Select car..."}
             renderLeftIcon={() => (
-                car ? (
+                currentCar ? (
 					<Image source={CarImg} style={styles.iconContainer} />
 				) : (
 					<Ionicons name="car" size={30} color="black" />

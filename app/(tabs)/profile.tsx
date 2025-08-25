@@ -152,7 +152,7 @@ export default function Profile() {
 							{carArr.map((car, i) => (
 								<CarCard
 									key={i}
-									index={i}
+									id={car.id}
 									name={car.name}
 									desc={`${car.year} ${car.make} ${car.model}`}
 									mileage={car.mileage}
@@ -172,7 +172,7 @@ export default function Profile() {
 							{carArr.map((car, i) => (
 								<CarCard
 									key={i}
-									index={i}
+									id={car.id}
 									name={car.name}
 									desc={`${car.year} ${car.make} ${car.model}`}
 									mileage={car.mileage}
@@ -192,7 +192,7 @@ export default function Profile() {
 							{carArr.map((car, i) => (
 								<CarCard
 									key={i}
-									index={i}
+									id={car.id}
 									name={car.name}
 									desc={`${car.year} ${car.make} ${car.model}`}
 									mileage={car.mileage}

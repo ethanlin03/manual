@@ -8,11 +8,11 @@ type CarCardProps = {
     desc: string;
     mileage: string;
     image: any;
-    index: number;
+    id: string;
     alerts: number;
 }
 
-const CarCard: React.FC<CarCardProps> = ({name, desc, mileage, image, index, alerts}) => {
+const CarCard: React.FC<CarCardProps> = ({name, desc, mileage, image, id, alerts}) => {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
 
@@ -20,7 +20,7 @@ const CarCard: React.FC<CarCardProps> = ({name, desc, mileage, image, index, ale
         console.log(image)
         router.push({
             pathname: '/history/[id]',
-            params: { id: index.toString(), name: encodeURIComponent(name) },
+            params: { id: id, name: encodeURIComponent(name) },
         });
     };
     return (

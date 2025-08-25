@@ -50,8 +50,10 @@ const AddCar = () => {
                 const userCarRef = doc(db, "cars", userId);
                 const annualMileageNum = Number(annualMileage);
                 const adjustedSchedule = adjustSchedule(annualMileageNum, baseSchedule);
+                const carId = doc(collection(db, "temp")).id;
 
                 const newCar = {
+                    id: carId,
                     name: carName,
                     year: carYear,
                     make: carMake,
@@ -62,14 +64,16 @@ const AddCar = () => {
                     alerts: 0,
                     maintenanceSchedule: adjustedSchedule
                 };
+                
                 await setDoc(userCarRef, {
                     cars: arrayUnion(newCar)
                 }, { merge: true });
+                
                 alert("New car has been added!")
                 router.push('/(tabs)')
             } catch (error: any) {
                 alert("Error adding car: " + error.message)
-                console.log(error.message)
+                console.log("There is an error adding car: ", error.message)
             }
         } else {
             alert("Fill in the fields!")
