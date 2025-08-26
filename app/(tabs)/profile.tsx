@@ -17,7 +17,7 @@ export default function Profile() {
 	const [openModal, setOpenModal] = useState(false);
 	const [firstName, setFirstName] = useState("");
 	const [lastName, setLastName] = useState("");
-	const [userId, setUserId] = useContext(UserContext);
+	const { userId, setUserId } = useContext(UserContext);
 	const [profilePicture, setProfilePicture] = useState<string | null>(null);
 	const handleProfilePicture = () => {
 		setOpenModal(true);

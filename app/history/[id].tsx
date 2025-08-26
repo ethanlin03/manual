@@ -26,7 +26,7 @@ export default function HistoryPage() {
 	// need to update cardropdownmenu after car settings is updated
 	const { id, name } = useLocalSearchParams();
 	const [carId, setCarId] = useState(id);
-	const [userId, setUserId] = useContext(UserContext);
+	const { userId, setUserId } = useContext(UserContext);
 	const [decodedName, setDecodedName] = useState(decodeURIComponent(name as string));
 	const [carArr, setCarArr] = useContext(CarContext);
 	const [car, setCar] = useState<Car>();

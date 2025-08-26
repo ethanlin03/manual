@@ -7,7 +7,7 @@ import { CarContext } from '../CarContext';
 
 export default function Home() {
 	const router = useRouter();
-	const [carArr, setCarArr] = useContext(CarContext)
+	const [carArr, setCarArr] = useContext(CarContext);
 
 	const handleAddCar = () => {
 		router.push('/car/addcar');

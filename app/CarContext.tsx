@@ -27,7 +27,7 @@ export const CarContext = createContext<[Car[], React.Dispatch<React.SetStateAct
 
 export default function CarProvider({ children }: { children: React.ReactNode }) {
     const [cars, setCars] = useState<Car[]>([]);
-    const [userId, setUserId] = useContext(UserContext);
+    const { userId, setUserId } = useContext(UserContext);
 
     useEffect(() => {
         const fetchCars = async() => {

@@ -35,7 +35,7 @@ export default function History() {
 	const [height, setHeight] = useState(0);
 	const [currDate, setCurrDate] = useState(new Date());
 	const [carArr, setCarArr] = useContext(CarContext);
-	const [userId, setUserId] = useContext(UserContext);
+	const { userId, setUserId } = useContext(UserContext);
 	const [overallServiceHist, setOverallServiceHist] = useState<Service[]>([]);
 	const [serviceArr, setServiceArr] = useState([
 		"Oil Change", "Tire Rotation", "Brake Inspection", 

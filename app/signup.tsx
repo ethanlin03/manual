@@ -17,7 +17,7 @@ export default function SignUp() {
     const [confirmedPass, setConfirmedPass] = useState("");
     const [passwordVisibility, setPasswordVisibility] = useState(false);
     const [confirmedPassVisibility, setConfirmedPassVisibility] = useState(false);
-    const [userId, setUserId] = useContext(UserContext);
+    const {userId, setUserId} = useContext(UserContext);
     const handleVisibility = () => {
         setPasswordVisibility(!passwordVisibility)
         //small bug where turning on and off visibility resets password
@@ -34,10 +34,11 @@ export default function SignUp() {
                 email: user.email,
                 firstName: firstName,
                 lastName: lastName,
+                firstTime: true,
                 createdAt: serverTimestamp()
             })
             if (userCreds) {
-                setUserId(userCreds.user.uid)
+                setUserId(userCreds.user.uid);
                 router.replace('/(tabs)')
             }
         } catch (error: any) {

@@ -25,7 +25,7 @@ const AddCar = () => {
     const [carModel, setCarModel] = useState("");
     const [mileage, setMileage] = useState("");
     const [annualMileage, setAnnualMileage] = useState("");
-    const [userId, setUserId] = useContext(UserContext);
+    const { userId, setUserId } = useContext(UserContext);
 
     const handleBack = () => {
 		router.push('/(tabs)')

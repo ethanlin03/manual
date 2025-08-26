@@ -7,7 +7,7 @@ import { getDoc, doc, onSnapshot, updateDoc } from 'firebase/firestore';
 import { db } from '@/FirebaseConfig';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { Car } from '@/app/CarContext';
-import { UserContext } from '@/app/UserContext';
+import UserProvider, { UserContext } from '@/app/UserContext';
 
 interface ServiceProps {
     specificCar?: Car;
@@ -28,7 +28,7 @@ interface Service {
 
 export const ServiceSection = ({ specificCar, removeService, setRemoveService, filter, sortAsc, sortDesc }: ServiceProps) => {
     const [height, setHeight] = useState(0);
-    const [userId, setUserId] = useContext(UserContext);
+    const { userId, setUserId } = useContext(UserContext);
     const [removedServices, setRemovedServices] = useState<Service[]>([]);
     const [serviceHistory, setServiceHistory] = useState<Service[]>([]);
     const [serviceArr, setServiceArr] = useState([
@@ -146,7 +146,7 @@ export const ServiceSection = ({ specificCar, removeService, setRemoveService, f
         });
 
         return () => unsubscribe();
-    }, [specificCar?.name, userId]);
+    }, [specificCar?.name, UserProvider]);
 
     return (
         <View className="flex-col p-4 flex-1 relative min-h-[65vh] h-auto pb-14">

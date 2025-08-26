@@ -21,7 +21,7 @@ const CarSettings = ({car, setSettings}: {car: Car | undefined, setSettings: Dis
     const [alertModal, setAlertModal] = useState(false);
     const [miles, setMiles] = useState(0);
     const [months, setMonths] = useState(0);
-    const [userId, setUserId] = useContext(UserContext);
+    const { userId, setUserId } = useContext(UserContext);
     const [userCars, setUserCars] = useContext(CarContext);
 
     const handleSubmit = async () => {
