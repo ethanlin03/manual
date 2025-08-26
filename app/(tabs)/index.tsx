@@ -1,13 +1,17 @@
 import { ScrollView, Text, TouchableOpacity, View, SafeAreaView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
+import { useRouter, useNavigation } from 'expo-router';
 import { useState, useEffect, useContext } from 'react';
+import FirstTimeModal from '@/components/FirstTimeModal';
 import CarCard from '@/components/CarCard';
 import { CarContext } from '../CarContext';
+import { UserContext } from '../UserContext';
 
 export default function Home() {
 	const router = useRouter();
+	const navigation = useNavigation();
 	const [carArr, setCarArr] = useContext(CarContext);
+	const { userId, setUserId, firstTime, setFirstTime } = useContext(UserContext);
 
 	const handleAddCar = () => {
 		router.push('/car/addcar');
@@ -19,6 +23,7 @@ export default function Home() {
 	
   	return (
 		<SafeAreaView className="flex-1 bg-white">
+			{firstTime && <FirstTimeModal firstTime={firstTime} setFirstTime={setFirstTime}/>}
 			<ScrollView className="flex-1 mx-auto p-2">
 				<Text className="font-bold text-2xl">Home Page</Text>
 				<View className="flex-col pb-16">

@@ -1,16 +1,18 @@
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import React from 'react';
+import React, { useContext } from 'react';
 import { Platform } from 'react-native';
 
 import { HapticTab } from '@/components/HapticTab';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
+import { UserContext } from '../UserContext';
 import { useColorScheme } from '@/hooks/useColorScheme';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const { firstTime } = useContext(UserContext);
 
   return (
     <Tabs
@@ -19,13 +21,18 @@ export default function TabLayout() {
         headerShown: false,
         tabBarButton: HapticTab,
         tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: 'absolute',
+        tabBarStyle: [
+          {
+            ...Platform.select({
+              ios: {
+                // Use a transparent background on iOS to show the blur effect
+                position: 'absolute',
+              },
+              default: {},
+            }),
           },
-          default: {},
-        }),
+          firstTime ? { display: 'none' } : {},
+        ],
       }}>
       <Tabs.Screen
         name="index"
