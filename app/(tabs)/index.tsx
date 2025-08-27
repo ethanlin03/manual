@@ -23,7 +23,7 @@ export default function Home() {
 	
   	return (
 		<SafeAreaView className="flex-1 bg-white">
-			{firstTime && <FirstTimeModal firstTime={firstTime} setFirstTime={setFirstTime}/>}
+			{firstTime && <FirstTimeModal firstTime={firstTime} setFirstTime={setFirstTime} userId={userId}/>}
 			<ScrollView className="flex-1 mx-auto p-2">
 				<Text className="font-bold text-2xl">Home Page</Text>
 				<View className="flex-col pb-16">
