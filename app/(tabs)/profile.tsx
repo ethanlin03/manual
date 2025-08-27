@@ -12,6 +12,7 @@ import { CarContext } from '../CarContext';
 import TempProfilePic from '@/assets/images/profile_pic.jpg';
 
 export default function Profile() {
+	//TODO: Fix signout issue with onSnapshot
 	const router = useRouter();
 	const [carArr, setCarArr] = useContext(CarContext);
 	const [openModal, setOpenModal] = useState(false);
