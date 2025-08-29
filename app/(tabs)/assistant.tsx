@@ -5,12 +5,25 @@ import { GoogleGenAI } from '@google/genai';
 
 //const fillerResponse = "This is a filler response: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
 const ai = new GoogleGenAI({ apiKey: process.env.EXPO_PUBLIC_GEMINI_API_KEY });
+const fakeChats = [
+	{ id: 1, title: "Debugging React state issue" },
+	{ id: 2, title: "SQL query optimization" },
+	{ id: 3, title: "Resume skills refinement" },
+	{ id: 4, title: "Consumer privacy law duties" },
+	{ id: 5, title: "C++ map default values" },
+	{ id: 6, title: "LeetCode anagram solution" },
+	{ id: 7, title: "Vector frequency counter" },
+	{ id: 8, title: "Serverless vs full-stack APIs" },
+	{ id: 9, title: "Tiva C microcontroller pins" },
+	{ id: 10, title: "UI overlay design in React" }
+];
 
 export default function Assistant() {
 	const [searchQuery, setSearchQuery] = useState("");
 	const [searchHistory, setSearchHistory] = useState<string[]>([]);
 	const [sidebar, setSidebar] = useState(false);
 	const [thinking, setThinking] = useState(false);
+	const [selectedChat, setSelectedChat] = useState(0);
 	const scrollRef = useRef<ScrollView | null>(null);
 
 	const submitSearch = async () => {
@@ -36,6 +49,10 @@ export default function Assistant() {
 		}
 
 		setThinking(false);
+	}
+
+	const setChat = (i: number) => {
+		setSelectedChat(i);
 	}
 
 	useEffect(() => {
@@ -65,13 +82,33 @@ export default function Assistant() {
 							className="absolute inset-0 z-50"
 							onPress={() => setSidebar(false)}
 						>
-							<View className="flex-1 bg-[rgba(0,0,0,0.35)] z-60">
-								<View className="flex-1 w-[60vw] h-full bg-white p-4">
-									<View className="flex flex-row justify-between">
-										<Text className="font-bold text-lg">Menu</Text>
-										<TouchableOpacity onPress={() => setSidebar(false)}>
-											<Ionicons name="chevron-back-outline" size={24}/>
-										</TouchableOpacity>
+							<View className="flex-1 bg-[rgba(0,0,0,0.35)] z-60 border-t border-gray-300">
+								<View className="flex flex-col w-[60vw] h-full bg-white p-4">
+									<View className="h-[20%]">
+										<View className="flex flex-row justify-between mb-6">
+											<Text className="font-bold text-lg">Menu</Text>
+											<TouchableOpacity onPress={() => setSidebar(false)}>
+												<Ionicons name="chevron-back-outline" size={24}/>
+											</TouchableOpacity>
+										</View>
+										<View className="flex flex-row items-center mb-4">
+											<Ionicons name="create-outline" size={24} className="mr-1"/>
+											<Text>New Chat</Text>
+										</View>
+										<View className="flex flex-row items-center">
+											<Ionicons name="search-outline" size={24} className="mr-1"/>
+											<Text>Search Chats</Text>
+										</View>
+									</View>
+									<View className="flex-1">
+										<Text className="font-semibold text-lg mb-4">Chats</Text>
+										<ScrollView className="flex-col gap-8 mb-10">
+											{fakeChats.map((chat, i) => (
+												<TouchableOpacity key={i} onPress={() => setChat(i)} className={`p-3 ${i === selectedChat ? `bg-blue-200` : ``} rounded-xl shadow`}>
+													<Text className="text-lg">{chat.title}</Text>
+												</TouchableOpacity>
+											))}
+										</ScrollView>
 									</View>
 								</View>
 							</View>
