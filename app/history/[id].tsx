@@ -1,5 +1,5 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { Image, KeyboardAvoidingView, SafeAreaView, StyleSheet, ScrollView, Text, TouchableOpacity, View, Platform, Pressable, TextInput } from 'react-native';
+import { Image, KeyboardAvoidingView, SafeAreaView, StyleSheet, ScrollView, Text, TouchableOpacity, View, Platform, Pressable, TextInput, Touchable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Dropdown } from 'react-native-element-dropdown';
 import React, { use, useContext, useEffect, useState } from 'react';
@@ -43,6 +43,8 @@ export default function HistoryPage() {
 	const [filter, setFilter] = useState("");
 	const [sortAsc, setSortAsc] = useState(false);
 	const [sortDesc, setSortDesc] = useState(false);
+	const [notifications, setNotifications] = useState(0);
+	const [notificationModal, setNotificationModal] = useState(false);
 	const router = useRouter();
 
 	const handleBack = () => {
@@ -123,6 +125,15 @@ export default function HistoryPage() {
 		setSearchedService("")
 	};
 
+	const redirectToNotifications = () => {
+		console.log("Notifications")
+		setNotificationModal(true)
+	};
+
+	const handleCloseNotifications = () => {
+		setNotificationModal(false)
+	};
+
 	useEffect(() => {
 		console.log("Car array updated:", carArr);
 		const foundCar = carArr.find(c => c.id === car?.id);
@@ -133,13 +144,14 @@ export default function HistoryPage() {
 
 	useEffect(() => {
 		setRemoveIcon(false);
-		if(car)
+		if(car) {
 			setCarId(car.id)
+			setNotifications(car.alerts)
+		}
 
 	}, [car])
 
 	useEffect(() => {
-		console.log("Car array updated:", carArr);
 		carArr.forEach((car) => {
 			console.log("car is: " + JSON.stringify(car))
 			if(car.id === id) {
@@ -235,11 +247,42 @@ export default function HistoryPage() {
 				</Pressable>
 			)}
 			{settings && ( <CarSettings car={car} setSettings={setSettings}/> )}
+			{notificationModal && (
+				<Pressable onPress={handleCloseNotifications} className="absolute inset-0 bg-black/50 items-center justify-center z-10">
+					<Pressable onPress={() => {}}>
+						<KeyboardAvoidingView
+							className="flex-1 justify-center items-center"
+							behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+						>
+							<View className="flex flex-col bg-white min-w-[60vw] min-h-[50vh] p-4 rounded-lg">
+								<Text className="self-center text-lg font-semibold mb-6">Upcoming Services</Text>
+								<TouchableOpacity onPress={() => setFilterModal(false)} className="p-2 absolute top-0 right-0">
+									<Ionicons name="close" size={20} color="black" />
+								</TouchableOpacity>
+								{notifications > 0 ? <Text>All upcoming services listed here:</Text> : <Text className="self-center">No upcoming services</Text>}
+								{/* Fill with upcoming services */}
+							</View>
+						</KeyboardAvoidingView>
+					</Pressable>
+				</Pressable>
+			)}
 			<View className="flex bg-blue-300">
 				<SafeAreaView>
-					<TouchableOpacity onPress={handleBack} className="p-4">
-						<Ionicons name="arrow-back" size={20}/>
-					</TouchableOpacity>
+					<View className="flex flex-row justify-between items-center p-4">
+						<TouchableOpacity onPress={handleBack}>
+							<Ionicons name="arrow-back" size={20}/>
+						</TouchableOpacity>
+						<TouchableOpacity onPress={redirectToNotifications}>
+							<View className="flex flex-row items-center">
+								<View className={`flex items-center justify-center ml-auto mb-auto w-6 h-6 rounded-full border ${notifications >= 4 ? `bg-red-400` : (notifications >= 2 ? 'bg-yellow-400' : 'bg-green-400')}`}>
+									<Text className="font-semibold text-xs">
+										{notifications > 9 ? '9+' : notifications}
+									</Text>
+								</View>
+								<Ionicons name="chevron-forward-outline" size={14}/>
+							</View>
+						</TouchableOpacity>
+					</View>
 					<CarDropDownMenu car={car} setCar={setCar}/>
 
 					<View className="flex flex-row items-center justify-between self-center mb-10 w-[90vw]">
