@@ -1,4 +1,4 @@
-import { Image, Pressable, SafeAreaView, ScrollView, View, Text, TouchableOpacity } from 'react-native';
+import { Image, KeyboardAvoidingView, Platform, Pressable, SafeAreaView, ScrollView, View, Text, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useState, useEffect, useContext } from 'react';
 import { signOut } from "firebase/auth";
@@ -15,26 +15,15 @@ export default function Profile() {
 	//TODO: Fix signout issue with onSnapshot
 	const router = useRouter();
 	const [carArr, setCarArr] = useContext(CarContext);
-	const [openModal, setOpenModal] = useState(false);
+	const [cameraModal, setCameraModal] = useState(false);
+	const [settingModal, setSettingModal] = useState(false);
 	const [firstName, setFirstName] = useState("");
 	const [lastName, setLastName] = useState("");
 	const { userId, setUserId } = useContext(UserContext);
 	const [profilePicture, setProfilePicture] = useState<string | null>(null);
 	const handleProfilePicture = () => {
-		setOpenModal(true);
+		setCameraModal(true);
 	}
-
-	useEffect(() => {
-		const fetchFirstLastName = async () => {
-			const userRef = doc(db, "users", userId);
-			const userSnap = await getDoc(userRef);
-			if(userSnap.exists()) {
-				setFirstName(userSnap.data().firstName);
-				setLastName(userSnap.data().lastName);
-			} 
-		};
-		fetchFirstLastName();
-	}, []);
 
 	const uploadImage = async (mode: 'gallery' | 'camera') => {
 		try {
@@ -74,13 +63,14 @@ export default function Profile() {
 	const saveImage = async (image: any) => {
 		try {
 			setProfilePicture(image);
-			setOpenModal(false);
+			setCameraModal(false);
 		} catch (error) {
 			throw error;
 		}
 	}
 	const openSettings = () => {
 		console.log("Settings opened");
+		setSettingModal(true);
 	}
 	const handleSignOut = async () => {
 		try {
@@ -92,8 +82,56 @@ export default function Profile() {
 		}
 	}
 
+	useEffect(() => {
+		const fetchFirstLastName = async () => {
+			const userRef = doc(db, "users", userId);
+			const userSnap = await getDoc(userRef);
+			if(userSnap.exists()) {
+				setFirstName(userSnap.data().firstName);
+				setLastName(userSnap.data().lastName);
+			} 
+		};
+		fetchFirstLastName();
+	}, []);
+
 	return (
 		<SafeAreaView className="flex-1 max-h-screen items-center justify-start bg-white pb-20">
+			{cameraModal &&
+				<Pressable onPress={() => setCameraModal(false)} className="absolute inset-0 bg-black/50 flex items-center justify-center z-10">
+					<View className="flex flex-col bg-white min-w-[60vw] p-4 rounded-lg">
+						<TouchableOpacity onPress={() => setCameraModal(false)} className="p-2 absolute top-0 right-0">
+							<Ionicons name="close" size={20} color="black" />
+						</TouchableOpacity>
+						<View className="flex flex-row justify-between items-center mb-4 mt-6">
+							<TouchableOpacity onPress={() => uploadImage('gallery')} className="flex flex-col items-center">
+								<Ionicons name="cloud-upload-outline" size={30} />
+								<Text className="text-sm mb-4">Upload an Image</Text>
+							</TouchableOpacity>
+							<TouchableOpacity onPress={() => uploadImage('camera')} className="flex flex-col items-center">
+								<Ionicons name="camera-outline" size={30} />
+								<Text className="text-sm mb-4">Open Camera</Text>
+							</TouchableOpacity>
+						</View>
+					</View>
+				</Pressable>
+			}
+			{settingModal && (
+				<Pressable onPress={() => setSettingModal(false)} className="absolute inset-0 bg-black/50 flex items-center justify-center z-10">
+					<KeyboardAvoidingView
+						className="flex-1 justify-center items-center"
+						behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+					>
+						<Pressable onPress={(e) => e.stopPropagation()}>
+							<View className="flex flex-col items-center bg-white min-w-[60vw] min-h-[50vh] p-6 rounded-lg">
+								<TouchableOpacity onPress={() => setSettingModal(false)} className="p-2 absolute top-0 right-0">
+									<Ionicons name="close" size={20} color="black" />
+								</TouchableOpacity>
+								<Text className="font-semibold">Setting Modal</Text>
+							</View>
+						</Pressable>
+					</KeyboardAvoidingView>
+				</Pressable>
+			)}
 			<View className='w-full h-auto'>
 				<TouchableOpacity onPress={openSettings} className='mr-2 absolute top-0 right-0 p-4 z-10'>
 					<Ionicons name='settings-sharp' color="gray" size={16}/>
@@ -103,25 +141,6 @@ export default function Profile() {
 				directionalLockEnabled={true}
   				showsVerticalScrollIndicator={false}
 			>
-				{openModal &&
-					<Pressable onPress={() => setOpenModal(false)} className="absolute inset-0 bg-black/50 flex items-center justify-center z-10">
-						<View className="flex flex-col bg-white min-w-[60vw] p-4 rounded-lg">
-							<TouchableOpacity onPress={() => setOpenModal(false)} className="p-2 absolute top-0 right-0">
-								<Ionicons name="close" size={20} color="black" />
-							</TouchableOpacity>
-							<View className="flex flex-row justify-between items-center mb-4 mt-6">
-								<TouchableOpacity onPress={() => uploadImage('gallery')} className="flex flex-col items-center">
-									<Ionicons name="cloud-upload-outline" size={30} />
-									<Text className="text-sm mb-4">Upload an Image</Text>
-								</TouchableOpacity>
-								<TouchableOpacity onPress={() => uploadImage('camera')} className="flex flex-col items-center">
-									<Ionicons name="camera-outline" size={30} />
-									<Text className="text-sm mb-4">Open Camera</Text>
-								</TouchableOpacity>
-							</View>
-						</View>
-					</Pressable>
-				}
 				<View className="items-center justify-center px-6 pb-20 w-full">
 					<View className="flex flex-col items-center mt-10 h-[40vh]">
 						<View className="relative mb-4">

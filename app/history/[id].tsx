@@ -165,11 +165,11 @@ export default function HistoryPage() {
 		<View className="flex-1 bg-white">
 			{addModal && (
 				<Pressable onPress={() => setAddModal(false)} className="absolute inset-0 bg-black/50 items-center justify-center z-10">
-					<Pressable onPress={() => {}}>
-						<KeyboardAvoidingView
-							className="flex-1 justify-center items-center"
-							behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-						>
+					<KeyboardAvoidingView
+						className="flex-1 justify-center items-center"
+						behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+					>
+						<Pressable onPress={(e) => e.stopPropagation()}>
 							<View className="flex flex-col bg-white min-w-[60vw] p-4 rounded-lg">
 								<Text className="self-center text-lg font-semibold">Add service</Text>
 								<TouchableOpacity onPress={() => setAddModal(false)} className="p-2 absolute top-0 right-0">
@@ -211,17 +211,17 @@ export default function HistoryPage() {
 									<Text className="text-sm font-semibold">Submit</Text>
 								</Pressable>
 							</View>
-						</KeyboardAvoidingView>
-					</Pressable>
+						</Pressable>
+					</KeyboardAvoidingView>
 				</Pressable>
 			)}
 			{filterModal && (
 				<Pressable onPress={handleCloseFilter} className="absolute inset-0 bg-black/50 items-center justify-center z-10">
-					<Pressable onPress={() => {}}>
-						<KeyboardAvoidingView
-							className="flex-1 justify-center items-center"
-							behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-						>
+					<KeyboardAvoidingView
+						className="flex-1 justify-center items-center"
+						behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+					>
+						<Pressable onPress={(e) => e.stopPropagation()}>
 							<View className="flex flex-col bg-white min-w-[60vw] p-4 rounded-lg">
 								<Text className="self-center text-lg font-semibold">Sort By</Text>
 								<TouchableOpacity onPress={() => setFilterModal(false)} className="p-2 absolute top-0 right-0">
@@ -242,28 +242,28 @@ export default function HistoryPage() {
 									<Text className="text-sm font-semibold">Submit</Text>
 								</Pressable>
 							</View>
-						</KeyboardAvoidingView>
-					</Pressable>
+						</Pressable>
+					</KeyboardAvoidingView>
 				</Pressable>
 			)}
 			{settings && ( <CarSettings car={car} setSettings={setSettings}/> )}
 			{notificationModal && (
 				<Pressable onPress={handleCloseNotifications} className="absolute inset-0 bg-black/50 items-center justify-center z-10">
-					<Pressable onPress={() => {}}>
-						<KeyboardAvoidingView
-							className="flex-1 justify-center items-center"
-							behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-						>
+					<KeyboardAvoidingView
+						className="flex-1 justify-center items-center"
+						behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+					>
+						<Pressable onPress={(e) => e.stopPropagation()}>
 							<View className="flex flex-col bg-white min-w-[60vw] min-h-[50vh] p-4 rounded-lg">
 								<Text className="self-center text-lg font-semibold mb-6">Upcoming Services</Text>
-								<TouchableOpacity onPress={() => setFilterModal(false)} className="p-2 absolute top-0 right-0">
+								<TouchableOpacity onPress={() => setNotificationModal(false)} className="p-2 absolute top-0 right-0">
 									<Ionicons name="close" size={20} color="black" />
 								</TouchableOpacity>
 								{notifications > 0 ? <Text>All upcoming services listed here:</Text> : <Text className="self-center">No upcoming services</Text>}
 								{/* Fill with upcoming services */}
 							</View>
-						</KeyboardAvoidingView>
-					</Pressable>
+						</Pressable>
+					</KeyboardAvoidingView>
 				</Pressable>
 			)}
 			<View className="flex bg-blue-300">

@@ -53,6 +53,8 @@ export default function Assistant() {
 
 	const setChat = (i: number) => {
 		setSelectedChat(i);
+		// need to open the chat for that
+		setSidebar(false);
 	}
 
 	useEffect(() => {
