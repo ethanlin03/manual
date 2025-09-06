@@ -1,4 +1,4 @@
-import { Image, KeyboardAvoidingView, Platform, Pressable, SafeAreaView, ScrollView, View, Text, TouchableOpacity } from 'react-native';
+import { Image, KeyboardAvoidingView, Platform, Pressable, SafeAreaView, ScrollView, View, Text, TextInput, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useState, useEffect, useContext } from 'react';
 import { signOut } from "firebase/auth";
@@ -19,6 +19,11 @@ export default function Profile() {
 	const [settingModal, setSettingModal] = useState(false);
 	const [firstName, setFirstName] = useState("");
 	const [lastName, setLastName] = useState("");
+	const [changedFirst, setChangedFirst] = useState("");
+	const [changedLast, setChangedLast] = useState("");
+	const [email, setEmail] = useState("");
+	const [zipCode, setZipCode] = useState("");
+	const [password, setPassword] = useState("");
 	const { userId, setUserId } = useContext(UserContext);
 	const [profilePicture, setProfilePicture] = useState<string | null>(null);
 	const handleProfilePicture = () => {
@@ -81,6 +86,10 @@ export default function Profile() {
 			console.error("Error signing out:", error);
 		}
 	}
+	const handleSubmit = () => {
+		console.log("Submit");
+		setSettingModal(false);
+	}
 
 	useEffect(() => {
 		const fetchFirstLastName = async () => {
@@ -122,11 +131,44 @@ export default function Profile() {
 						behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
 					>
 						<Pressable onPress={(e) => e.stopPropagation()}>
-							<View className="flex flex-col items-center bg-white min-w-[60vw] min-h-[50vh] p-6 rounded-lg">
+							<View className="flex flex-col items-center bg-white min-w-[60vw] min-h-[40vh] p-6 rounded-lg">
 								<TouchableOpacity onPress={() => setSettingModal(false)} className="p-2 absolute top-0 right-0">
 									<Ionicons name="close" size={20} color="black" />
 								</TouchableOpacity>
-								<Text className="font-semibold">Setting Modal</Text>
+								<Text className="font-semibold text-lg mb-4">Setting Modal</Text>
+								<View className="flex-1 flex-col gap-6 w-full">
+									<TextInput
+										placeholder="First Name..."
+										onChangeText={setChangedFirst}
+										value={changedFirst}
+										className="bg-gray-200 rounded-lg p-2"
+										placeholderTextColor="#888"
+									/>
+									<TextInput
+										placeholder="Last Name..."
+										onChangeText={setChangedLast}
+										value={changedLast}
+										className="bg-gray-200 rounded-lg p-2"
+										placeholderTextColor="#888"
+									/>
+									<TextInput
+										placeholder="Email..."
+										onChangeText={setEmail}
+										value={email}
+										className="bg-gray-200 rounded-lg p-2"
+										placeholderTextColor="#888"
+									/>
+									<TextInput
+										placeholder="Zip Code..."
+										onChangeText={setZipCode}
+										value={zipCode}
+										className="bg-gray-200 rounded-lg p-2"
+										placeholderTextColor="#888"
+									/>
+								</View>
+								<Pressable onPress={handleSubmit} className="self-end w-auto bg-blue-200 p-2 rounded-lg">
+									<Text className="text-sm font-semibold">Submit</Text>
+								</Pressable>
 							</View>
 						</Pressable>
 					</KeyboardAvoidingView>
@@ -167,6 +209,7 @@ export default function Profile() {
 							horizontal={true}
 							showsHorizontalScrollIndicator={false}
 							directionalLockEnabled={true}
+							nestedScrollEnabled={true}
 							className="flex-row h-auto py-2 px-1"
 						>
 							{carArr.map((car, i) => (
@@ -187,6 +230,7 @@ export default function Profile() {
 							horizontal={true}
 							showsHorizontalScrollIndicator={false}
 							directionalLockEnabled={true}
+							nestedScrollEnabled={true}
 							className="flex-row h-auto py-2 px-1"
 						>
 							{carArr.map((car, i) => (

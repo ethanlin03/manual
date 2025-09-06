@@ -60,7 +60,7 @@ const CalendarMonth = ({ initialYear, initialMonthIdx, currDate, setCurrDate }: 
 
     return (
         <View className="p-2">
-            <View className="border border-gray-400 p-4 rounded-lg">
+            <View className="border border-gray-300 p-4 rounded-lg">
                 <View className="flex flex-row items-center justify-between mb-4">
                     <Pressable onPress={handlePrevMonth}>
                         <Ionicons name="arrow-back-outline"/>
@@ -96,9 +96,9 @@ const CalendarMonth = ({ initialYear, initialMonthIdx, currDate, setCurrDate }: 
                                         setCurrDate(new Date(year, monthIdx, item.day));
                                     }}
                                 >
-                                    <View className={`h-12 justify-end items-end border ${item.day === currDate.getDate() && monthIdx === currDate.getMonth() ? "border-blue-500" : "border-gray-300"} p-1`}>
+                                    <View className={`h-12 justify-end items-end border-2 rounded-lg aspect-square mb-2 ${item.day === currDate.getDate() && monthIdx === currDate.getMonth() ? "border-blue-300" : "border-gray-200"} p-1`}>
                                         {!item.emptyDay && (
-                                            <View className={`rounded-full aspect-square items-center justify-center ${item.day === currDate.getDate() && monthIdx === currDate.getMonth() ? "bg-gray-300" : ""}`}>
+                                            <View className={`rounded-full aspect-square items-center justify-center ${item.day === currDate.getDate() && monthIdx === currDate.getMonth() ? "bg-gray-200" : ""}`}>
                                                 <Text className={`text-sm font-bold ${monthIdx === currMonth && item.day === currDay && "text-blue-500"}`}>
                                                     {item.day}
                                                 </Text>
