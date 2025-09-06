@@ -13,7 +13,6 @@ const CarSettings = ({car, setSettings}: {car: Car | undefined, setSettings: Dis
     const [carName, setCarName] = useState("");
     const [mileage, setMileage] = useState("");
     const [licensePlate, setLicensePlate] = useState("");
-    const [zipCode, setZipCode] = useState("");
     const [maintenance, setMaintenance] = useState("");
     const [allMaintenances, setAllMaintenances] = useState(car?.maintenanceSchedule);
     const [notes, setNotes] = useState("");
@@ -29,6 +28,10 @@ const CarSettings = ({car, setSettings}: {car: Car | undefined, setSettings: Dis
         // currently doesn't update maintenance schedule and needs to update it from maintenance modal
         // need to have placeholders for license plate and zipcode right
         // need to update car settings and car id page after update (display right oil change miles etc.)
+        if(miles === 0 || months === 0 || carName.length === 0 || mileage.length === 0 || licensePlate.length === 0) {
+            setSettings(false);
+            return;
+        }
         try {
             const userCarRef = doc(db, "cars", userId);
             const updatedCars = userCars.map((c) => {
@@ -38,7 +41,6 @@ const CarSettings = ({car, setSettings}: {car: Car | undefined, setSettings: Dis
                         name: carName.trim() !== "" ? carName : c.name || "Unnamed Car",
                         mileage: mileage.trim() !== "" ? mileage : c.mileage || 0,
                         licensePlate: licensePlate.trim() !== "" ? licensePlate : "empty",
-                        zipCode: zipCode.trim() !== "" ? zipCode : "empty",
                         maintenanceSchedule: allMaintenances
                     };
                 }
@@ -77,7 +79,7 @@ const CarSettings = ({car, setSettings}: {car: Car | undefined, setSettings: Dis
     };
 
     const handleClose = () => {
-        if(miles !== 0 || months !== 0 || carName.length !== 0 || mileage.length !== 0 || zipCode.length !== 0 || licensePlate.length !== 0) {
+        if(miles !== 0 || months !== 0 || carName.length !== 0 || mileage.length !== 0 || licensePlate.length !== 0) {
             setAlertModal(true);
             return;
         }
@@ -117,7 +119,6 @@ const CarSettings = ({car, setSettings}: {car: Car | undefined, setSettings: Dis
                             <LabeledField fieldDescription="Car Name" inputValue={carName} setInputValue={setCarName} inputPlaceholder={car?.name} />
                             <LabeledField fieldDescription="Mileage" inputValue={mileage} setInputValue={setMileage} inputPlaceholder={car?.mileage} />
                             <LabeledField fieldDescription="License Plate" inputValue={licensePlate} setInputValue={setLicensePlate} inputPlaceholder={car?.name} />
-                            <LabeledField fieldDescription="Zip Code" inputValue={zipCode} setInputValue={setZipCode} inputPlaceholder={car?.name} />
                         </View>
                         <Text className="font-semibold">Maintenance Settings</Text>
                         <View className="flex flex-col justify-between items-center mb-10 mt-2 p-2 gap-2 border border-gray-300 rounded-lg">
