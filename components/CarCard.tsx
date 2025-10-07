@@ -24,9 +24,9 @@ const CarCard: React.FC<CarCardProps> = ({name, desc, mileage, image, id, alerts
         });
     };
     return (
-        <TouchableOpacity onPress={handleCarSelect} className="flex flex-row items-center shadow-gray-300 shadow-sm max-w-[95vw] bg-white border-b-1 border-gray-400 p-2 mb-2">
+        <TouchableOpacity onPress={handleCarSelect} className="flex flex-row items-center rounded-lg shadow-gray-100 shadow-sm max-w-[95vw] bg-white border-gray-300 border py-4 px-3 mb-2">
             <View className="w-[30vw] aspect-[4/3] mr-2 items-center justify-center">
-                <Image source={CarImg} className="w-full h-full" onLoadStart={() => setLoading(true)} onLoadEnd={() => setLoading(false)} resizeMode="cover"/>
+                <Image source={CarImg} className="w-full h-full rounded-md border border-gray-400" onLoadStart={() => setLoading(true)} onLoadEnd={() => setLoading(false)} resizeMode="cover"/>
                 {loading && <ActivityIndicator
                     size="small"
                     color="#60a5fa"
